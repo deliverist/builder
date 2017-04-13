@@ -1,0 +1,24 @@
+{
+	"name": "deliverist/builder",
+	"type": "library",
+	"description": "Project builder.",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Jan Pecha",
+			"homepage": "https://www.janpecha.cz/"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"czproject/path-helper": "^4.0",
+		"czproject/runner": "^1.0",
+		"nette/utils": "^2.4"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	},
+	"require-dev": {
+		"nette/tester": "^1.7"
+	}
+}
