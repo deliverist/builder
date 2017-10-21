@@ -3,8 +3,8 @@
 	namespace Deliverist\Builder\Commands;
 
 	use Deliverist\Builder\Builder;
-	use Deliverist\Builder\ICommand;
 	use Deliverist\Builder\CommandException;
+	use Deliverist\Builder\ICommand;
 
 
 	class GoogleAnalytics implements ICommand
