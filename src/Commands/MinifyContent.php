@@ -33,7 +33,7 @@
 				$lines = array_filter($lines, function ($line) { // remove empty lines
 					return $line !== '';
 				});
-				FileSystem::write($path, implode("\n", $lines));
+				FileSystem::write($path, implode("\n", $lines) . "\n");
 			}
 		}
 	}
