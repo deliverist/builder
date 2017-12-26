@@ -6,7 +6,7 @@
 [Download a latest package](https://github.com/deliverist/builder/releases) or use [Composer](http://getcomposer.org/):
 
 ```
-composer require [--dev] deliverist/builder
+composer require deliverist/builder
 ```
 
 `Deliverist\Builder` requires PHP 5.4.0 or later.
