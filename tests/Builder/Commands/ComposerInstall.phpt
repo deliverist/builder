@@ -24,8 +24,8 @@ test(function () {
 
 	Assert::same(array(
 		array('Running `composer install`', Builder::INFO),
-		array("$ 'composer' 'install' '--no-ansi' '--no-dev' '--no-interaction' '--no-progress' '--no-scripts' '--optimize-autoloader' '--prefer-dist'\n\nDirectory: .\n\n=> 0\n\n", Builder::DEBUG),
+		array("$ 'composer' 'install' '--no-ansi' '--no-dev' '--no-interaction' '--no-progress' '--optimize-autoloader' '--prefer-dist'\n\nDirectory: .\n\n=> 0\n\n", Builder::DEBUG),
 		array('Running `composer install`', Builder::INFO),
-		array("$ '/bin/composer' 'install' '--no-ansi' '--no-dev' '--no-interaction' '--no-progress' '--no-scripts' '--optimize-autoloader' '--prefer-dist'\n\nDirectory: app\n\n=> 0\n\n", Builder::DEBUG),
+		array("$ '/bin/composer' 'install' '--no-ansi' '--no-dev' '--no-interaction' '--no-progress' '--optimize-autoloader' '--prefer-dist'\n\nDirectory: app\n\n=> 0\n\n", Builder::DEBUG),
 	), $log);
 });

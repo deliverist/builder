@@ -41,7 +41,7 @@
 				'--no-dev',
 				'--no-interaction',
 				'--no-progress',
-				'--no-scripts',
+				// '--no-scripts',
 				'--optimize-autoloader',
 				'--prefer-dist',
 			), dirname($file));
