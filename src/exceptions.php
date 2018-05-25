@@ -16,3 +16,18 @@
 	class CommandException extends Exception
 	{
 	}
+
+
+	class FileSystemException extends Exception
+	{
+	}
+
+
+	class InvalidArgumentException extends Exception
+	{
+	}
+
+
+	class InvalidStateException extends Exception
+	{
+	}
