@@ -3,7 +3,7 @@
 	namespace Deliverist\Builder\Commands;
 
 	use Deliverist\Builder\Builder;
-	use Deliverist\Builder\CommandException;
+	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\ICommand;
 
 
@@ -20,11 +20,11 @@
 			$builder->log("Inserting Google Analytics code '$code' into '$file'.");
 
 			if (!is_string($file)) {
-				throw new GoogleAnalyticsException('File must be string, ' . gettype($file) . ' given.');
+				throw new InvalidArgumentException('File must be string, ' . gettype($file) . ' given.');
 			}
 
 			if (!is_string($code)) {
-				throw new GoogleAnalyticsException('Code must be string, ' . gettype($code) . ' given.');
+				throw new InvalidArgumentException('Code must be string, ' . gettype($code) . ' given.');
 			}
 
 			$parameters = $this->prepareParameters($file, $placeholder);
@@ -71,14 +71,9 @@
 			}
 
 			if ($parameters['placeholder'] === NULL) {
-				throw new GoogleAnalyticsException("Missing placeholder, unknow file extension '$extension'.");
+				throw new InvalidArgumentException("Missing placeholder, unknow file extension '$extension'.");
 			}
 
 			return $parameters;
 		}
-	}
-
-
-	class GoogleAnalyticsException extends CommandException
-	{
 	}

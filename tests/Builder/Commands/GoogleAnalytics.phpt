@@ -72,17 +72,17 @@ test(function () {
 
 	Assert::exception(function () use ($command, $builder) {
 		$command->run($builder);
-	}, 'Deliverist\Builder\Commands\GoogleAnalyticsException', 'File must be string, NULL given.');
+	}, 'Deliverist\Builder\InvalidArgumentException', 'File must be string, NULL given.');
 
 
 	Assert::exception(function () use ($command, $builder) {
 		$command->run($builder, 'file.txt');
-	}, 'Deliverist\Builder\Commands\GoogleAnalyticsException', 'Code must be string, NULL given.');
+	}, 'Deliverist\Builder\InvalidArgumentException', 'Code must be string, NULL given.');
 
 
 	Assert::exception(function () use ($command, $builder) {
 		file_put_contents(TEMP_DIR . '/file.txt', '[GA]');
 		$command->run($builder, 'file.txt', 'TEST-TXT');
-	}, 'Deliverist\Builder\Commands\GoogleAnalyticsException', "Missing placeholder, unknow file extension 'txt'.");
+	}, 'Deliverist\Builder\InvalidArgumentException', "Missing placeholder, unknow file extension 'txt'.");
 
 });
