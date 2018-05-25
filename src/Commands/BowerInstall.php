@@ -3,7 +3,7 @@
 	namespace Deliverist\Builder\Commands;
 
 	use Deliverist\Builder\Builder;
-	use Deliverist\Builder\CommandException;
+	use Deliverist\Builder\InvalidStateException;
 	use Deliverist\Builder\ICommand;
 
 
@@ -27,7 +27,6 @@
 		/**
 		 * @param  Builder
 		 * @param  string
-		 * @throws BowerInstallException
 		 */
 		public function run(Builder $builder, $file = 'bower.json')
 		{
@@ -40,12 +39,7 @@
 			$builder->logDebug($result->toText());
 
 			if (!$result->isOk()) {
-				throw new BowerInstallException('Bower install failed.');
+				throw new InvalidStateException('Bower install failed.');
 			}
 		}
-	}
-
-
-	class BowerInstallException extends CommandException
-	{
 	}
