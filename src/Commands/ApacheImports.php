@@ -3,7 +3,8 @@
 	namespace Deliverist\Builder\Commands;
 
 	use Deliverist\Builder\Builder;
-	use Deliverist\Builder\CommandException;
+	use Deliverist\Builder\FileSystemException;
+	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\ICommand;
 
 
@@ -17,26 +18,24 @@
 		 * @param  Builder
 		 * @param  string|string[]
 		 * @param  bool|NULL
-		 * @throws ApacheImportsException
 		 */
-		public function run(Builder $builder, $files = NULL, $removeFiles = NULL)
+		public function run(Builder $builder, $files = NULL, $removeFiles = TRUE)
 		{
 			if (!isset($files)) {
-				throw new ApacheImportsException("Missing parameter 'files'.");
+				throw new InvalidArgumentException("Missing parameter 'files'.");
 			}
 
 			$this->toRemove = array();
-			$removeFiles = isset($removeFiles) ? $removeFiles : TRUE;
 
 			if (!is_array($files)) {
-				$files = array($files);$this->toRemove = array();
+				$files = array($files);
 			}
 
 			foreach ($files as $file) {
 				$path = $builder->getPath($file);
 
 				if (!is_file($path)) {
-					throw new ApacheImportsException("File '$file' not found");
+					throw new FileSystemException("File '$file' not found.");
 				}
 
 				$this->processFile($path);
@@ -60,22 +59,17 @@
 		private function expandApacheImports($content, $path)
 		{
 			$dir = dirname($path);
-			return preg_replace_callback('~<!--#include\s+file="(.+)"\s+-->~U', function ($m) use ($dir) {
+			return preg_replace_callback('~<!--#include\s+file="(.+)"\s+-->~U', function ($m) use ($dir, $path) {
 				$file = $dir . '/' . $m[1];
 
 				if (is_file($file)) {
 					$this->toRemove[] = $file;
-					return $this->expandApacheImports(file_get_contents($file), dirname($file));
+					return $this->expandApacheImports(file_get_contents($file), $file);
 
 				} else {
-					throw new ApacheImportsException("Required file '" . $m[1] . "' is missing");
+					throw new FileSystemException("Required file '" . $m[1] . "' is missing.");
 				}
-				return $m[0];
+
 			}, $content);
 		}
-	}
-
-
-	class ApacheImportsException extends CommandException
-	{
 	}
