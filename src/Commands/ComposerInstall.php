@@ -3,7 +3,7 @@
 	namespace Deliverist\Builder\Commands;
 
 	use Deliverist\Builder\Builder;
-	use Deliverist\Builder\CommandException;
+	use Deliverist\Builder\InvalidStateException;
 	use Deliverist\Builder\ICommand;
 
 
@@ -27,7 +27,6 @@
 		/**
 		 * @param  Builder
 		 * @param  string
-		 * @throws ComposerInstallException
 		 */
 		public function run(Builder $builder, $file = 'composer.json')
 		{
@@ -49,12 +48,7 @@
 			$builder->logDebug($result->toText());
 
 			if (!$result->isOk()) {
-				throw new ComposerInstallException('Composer install failed.');
+				throw new InvalidStateException('Composer install failed.');
 			}
 		}
-	}
-
-
-	class ComposerInstallException extends CommandException
-	{
 	}
