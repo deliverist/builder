@@ -41,6 +41,19 @@ $builder->make('composer-install')
 
 ## Commands
 
+### ApacheImports
+
+Expands clause `<!--#include file="file.txt" -->` in specified files.
+
+``` php
+$builder->make('apache-imports', 'file-to-expand.txt');
+$builder->make('apache-imports', array(
+	'admin.js',
+	'front.js',
+));
+```
+
+
 ### BowerInstall
 
 Runs `bower install` in `bower.json` directory.
@@ -61,6 +74,31 @@ $builder->make('composer-install', 'path/to/composer.json');
 ```
 
 
+### Copy
+
+Copies specified files.
+
+``` php
+$builder->make('copy', 'old.txt', 'new.txt');
+$builder->make('copy', array(
+	'old.txt' => 'new.txt',
+));
+```
+
+
+### CreateDirectory
+
+Creates specified directories.
+
+``` php
+$builder->make('create-directory', 'new-directory');
+$builder->make('create-directory', array(
+	'new-directory',
+	'new-directory-2',
+));
+```
+
+
 ### GoogleAnalytics
 
 Replaces placeholder with Google Analytics script in file.
@@ -69,6 +107,80 @@ Replaces placeholder with Google Analytics script in file.
 $builder->make('google-analytics', 'path/to/file.php', 'UA-9876-5', '%% GA %%'); // replaces placeholder '%% GA %%' in file
 $builder->make('google-analytics', 'path/to/file.html', 'UA-9876-5'); // uses placeholder '<!-- GA -->' in file
 $builder->make('google-analytics', 'path/to/file.latte', 'UA-9876-5'); // uses placeholder {* GA *} in file
+```
+
+
+### GoogleClosureCompiler
+
+Minifies files in online Google Closure Compiler.
+
+``` php
+$builder->make('google-closure-compiler', 'script.js');
+$builder->make('google-closure-compiler', array(
+	'script-1.js',
+	'script-2.js',
+));
+```
+
+
+### LessCompile
+
+Runs `lessc` for compiling of LESS files.
+
+``` php
+$builder->make('less-compile', 'styles.less');
+$builder->make('less-compile', array(
+	'style-1.less',
+	'style-2.less',
+));
+```
+
+
+### MinifyContent
+
+Removes empty lines & whitespaces on start & end of lines.
+
+``` php
+$builder->make('minify-content', 'file.txt');
+$builder->make('minify-content', array(
+	'file-1.txt',
+	'file-2.txt',
+));
+```
+
+**Example:**
+
+Input:
+
+```
+{block content}
+	<h1>Homepage</h1>
+
+	<p>
+		Lorem ipsum dolor sit amet.
+	</p>
+{/block}
+```
+
+Output:
+
+```
+{block content}
+<h1>Homepage</h1>
+<p>
+Lorem ipsum dolor sit amet.
+</p>
+{/block}
+```
+
+
+### PingUrl
+
+Opens URL and shows content.
+
+``` php
+$builder->make('ping-url', 'https://example.com/migrations.php');
+$builder->make('ping-url', 'https://example.com/migrations.php', FALSE); // disable SSL validation
 ```
 
 
@@ -85,6 +197,7 @@ $builder->make('remove', array(
 ));
 ```
 
+
 ### Rename
 
 Renames file or directory.
@@ -93,6 +206,18 @@ Renames file or directory.
 $builder->make('rename', 'old.txt', 'new.txt');
 $builder->make('rename', array(
 	'old.txt' => 'new.txt',
+));
+```
+
+
+### ReplaceContent
+
+Replaces content in file.
+
+``` php
+$builder->make('rename', 'file.txt', array(
+	'from' => 'to',
+	'old string' => 'new string',
 ));
 ```
 
