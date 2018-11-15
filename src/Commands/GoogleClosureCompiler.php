@@ -5,6 +5,7 @@
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\FileSystemException;
 	use Deliverist\Builder\InvalidArgumentException;
+	use Deliverist\Builder\InvalidStateException;
 	use Deliverist\Builder\ICommand;
 
 
@@ -50,7 +51,7 @@
 
 			if (!is_string($output)) {
 				$error = error_get_last();
-				throw new GoogleClosureCompilerException("Unable to minfy: {$error['message']}\n");
+				throw new InvalidStateException("Unable to minfy: {$error['message']}\n");
 			}
 
 			file_put_contents($path, $output);
