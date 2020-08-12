@@ -99,6 +99,19 @@ $builder->make('create-directory', array(
 ```
 
 
+### CssExpandImports
+
+Expands clause `@import 'file.css'` in specified files.
+
+``` php
+$builder->make('css-expand-imports', 'file-to-expand.txt');
+$builder->make('css-expand-imports', array(
+	'admin.css',
+	'front.css',
+));
+```
+
+
 ### GoogleAnalytics
 
 Replaces placeholder with Google Analytics script in file.
