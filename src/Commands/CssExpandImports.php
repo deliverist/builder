@@ -51,11 +51,11 @@
 		 * @return string
 		 * @see    https://github.com/dg/ftp-deployment/blob/bf1cffb597896dd0d05cded01a9c3a16596c506d/src/Deployment/Preprocessor.php#L104
 		 */
-		private function expandCssImports($content, $origFile, $inMediaQuery = FALSE)
+		private function expandCssImports($content, $origFile, $currentMediaQuery = NULL)
 		{
 			$dir = dirname($origFile);
 
-			return preg_replace_callback('#@import\s+(?:url)?[(\'"]+(.+)[)\'"]+(\s+.+)?;#U', function ($m) use ($dir, $inMediaQuery) {
+			return preg_replace_callback('#@import\s+(?:url)?[(\'"]+(.+)[)\'"]+(\s+.+)?;#U', function ($m) use ($dir, $currentMediaQuery) {
 				$file = $dir . '/' . $m[1];
 
 				if (!is_file($file)) {
@@ -66,13 +66,13 @@
 				$newDir = dirname($file);
 				$mediaQuery = isset($m[2]) ? $this->normalizeMediaQuery($m[2]) : NULL;
 
-				if ($mediaQuery !== NULL && $inMediaQuery) {
+				if ($currentMediaQuery !== NULL && $mediaQuery !== $currentMediaQuery) {
 					return $m[0];
 				}
 
-				$s = $this->expandCssImports($s, $file, $mediaQuery !== NULL);
+				$s = $this->expandCssImports($s, $file, $mediaQuery);
 
-				if ($mediaQuery !== NULL) {
+				if ($mediaQuery !== NULL && $mediaQuery !== $currentMediaQuery) {
 					$s = '@media ' . $mediaQuery . " {\n"
 						. $s
 						. "}\n";

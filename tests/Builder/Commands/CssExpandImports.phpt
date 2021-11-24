@@ -55,6 +55,7 @@ test(function () {
 		"@import 'style5.css' all;",
 		"@import 'style6.css' screen and (min-width: 50em);",
 		"@import 'style7.css' screen and (min-width: 50em);",
+		"@import 'style10.css' screen and (min-width: 300px);"
 	])->write(TEMP_DIR . '/styles.css');
 
 	FileContent::create([
@@ -91,6 +92,16 @@ test(function () {
 	FileContent::create([
 		"/* STYLE 9 */",
 	])->write(TEMP_DIR . '/style9.css');
+
+	FileContent::create([
+		"/* STYLE 10 */",
+		"@import 'style11.css' screen and (min-width: 300px);",
+	])->write(TEMP_DIR . '/style10.css');
+
+	FileContent::create([
+		"/* STYLE 11 */",
+	])->write(TEMP_DIR . '/style11.css');
+
 	$command->run($builder, 'styles.css');
 
 	Assert::same(
@@ -110,6 +121,12 @@ test(function () {
 			"@media screen and (min-width: 50em) {",
 			"/* STYLE 7 */",
 			"@import 'style8.css'",
+			"}",
+			"",
+			"@media screen and (min-width: 300px) {",
+			"/* STYLE 10 */",
+			"/* STYLE 11 */",
+			"",
 			"}",
 		])->toString(),
 		file_get_contents(TEMP_DIR . '/styles.css')
