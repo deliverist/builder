@@ -52,6 +52,9 @@ test(function () {
 		"@import 'http://example.com/';",
 		"@import 'style2.css';",
 		"@import 'dir/style3.css';",
+		"@import 'style5.css' all;",
+		"@import 'style6.css' screen and (min-width: 50em);",
+		"@import 'style7.css' screen and (min-width: 50em);",
 	])->write(TEMP_DIR . '/styles.css');
 
 	FileContent::create([
@@ -67,6 +70,27 @@ test(function () {
 		"/* STYLE 4 */",
 	])->write(TEMP_DIR . '/style4.css');
 
+	FileContent::create([
+		"/* STYLE 5 */",
+	])->write(TEMP_DIR . '/style5.css');
+
+	FileContent::create([
+		"/* STYLE 6 */",
+	])->write(TEMP_DIR . '/style6.css');
+
+	FileContent::create([
+		"/* STYLE 7 */",
+		"@import 'style8.css'",
+	])->write(TEMP_DIR . '/style7.css');
+
+	FileContent::create([
+		"/* STYLE 8 */",
+		"@import 'style9.css' screen",
+	])->write(TEMP_DIR . '/style8.css');
+
+	FileContent::create([
+		"/* STYLE 9 */",
+	])->write(TEMP_DIR . '/style9.css');
 	$command->run($builder, 'styles.css');
 
 	Assert::same(
@@ -77,6 +101,17 @@ test(function () {
 			"/* STYLE 3 */",
 			"/* STYLE 4 */",
 			"",
+			"",
+			"/* STYLE 5 */",
+			"",
+			"@media screen and (min-width: 50em) {",
+			"/* STYLE 6 */",
+			"}",
+			"",
+			"@media screen and (min-width: 50em) {",
+			"/* STYLE 7 */",
+			"@import 'style8.css'",
+			"}",
 			"",
 		])->toString(),
 		file_get_contents(TEMP_DIR . '/styles.css')

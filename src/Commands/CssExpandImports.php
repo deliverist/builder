@@ -6,6 +6,7 @@
 	use Deliverist\Builder\FileSystemException;
 	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\ICommand;
+	use Nette\Utils\Strings;
 
 
 	class CssExpandImports implements ICommand
@@ -50,11 +51,11 @@
 		 * @return string
 		 * @see    https://github.com/dg/ftp-deployment/blob/bf1cffb597896dd0d05cded01a9c3a16596c506d/src/Deployment/Preprocessor.php#L104
 		 */
-		private function expandCssImports($content, $origFile)
+		private function expandCssImports($content, $origFile, $inMediaQuery = FALSE)
 		{
 			$dir = dirname($origFile);
 
-			return preg_replace_callback('#@import\s+(?:url)?[(\'"]+(.+)[)\'"]+;#U', function ($m) use ($dir) {
+			return preg_replace_callback('#@import\s+(?:url)?[(\'"]+(.+)[)\'"]+(\s+.+)?;#U', function ($m) use ($dir, $inMediaQuery) {
 				$file = $dir . '/' . $m[1];
 
 				if (!is_file($file)) {
@@ -63,7 +64,19 @@
 
 				$s = file_get_contents($file);
 				$newDir = dirname($file);
-				$s = $this->expandCssImports($s, $file);
+				$mediaQuery = isset($m[2]) ? $this->normalizeMediaQuery($m[2]) : NULL;
+
+				if ($mediaQuery !== NULL && $inMediaQuery) {
+					return $m[0];
+				}
+
+				$s = $this->expandCssImports($s, $file, $mediaQuery !== NULL);
+
+				if ($mediaQuery !== NULL) {
+					$s = '@media ' . $mediaQuery . " {\n"
+						. $s
+						. "}\n";
+				}
 
 				if ($newDir !== $dir) {
 					$tmp = $dir . '/';
@@ -79,5 +92,21 @@
 				return $s;
 
 			}, $content);
+		}
+
+
+		/**
+		 * @param  string $mediaQuery
+		 * @return string|NULL
+		 */
+		private function normalizeMediaQuery($mediaQuery)
+		{
+			$mediaQuery = Strings::trim($mediaQuery);
+
+			if ($mediaQuery === '' || $mediaQuery === 'all') {
+				return NULL;
+			}
+
+			return $mediaQuery;
 		}
 	}
