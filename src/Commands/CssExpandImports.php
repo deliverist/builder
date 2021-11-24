@@ -89,7 +89,7 @@
 					}
 				}
 
-				return rtrim($s, "\n") . "\n";
+				return rtrim($s, "\n");
 
 			}, $content);
 		}
