@@ -7,6 +7,37 @@ use Tester\Assert;
 require __DIR__ . '/../../bootstrap.php';
 
 
+class FileContent
+{
+	private $content;
+
+
+	private function __construct($content)
+	{
+		$this->content = $content;
+	}
+
+
+	public function toString()
+	{
+		return $this->content;
+	}
+
+
+	public function write($path)
+	{
+		@mkdir(dirname($path), 0777, TRUE);
+		file_put_contents($path, $this->content);
+	}
+
+
+	public static function create(array $lines)
+	{
+		return new self(implode("\n", $lines) . "\n");
+	}
+}
+
+
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
@@ -17,15 +48,39 @@ test(function () {
 	};
 	$command = new Commands\CssExpandImports;
 
-	file_put_contents(TEMP_DIR . '/styles.css', "@import 'http://example.com/';\n@import 'style2.css';\n@import 'dir/style3.css';\n");
-	file_put_contents(TEMP_DIR . '/style2.css', "/* STYLE 2 */\n");
-	mkdir(TEMP_DIR . '/dir');
-	file_put_contents(TEMP_DIR . '/dir/style3.css', "/* STYLE 3 */\n@import '../style4.css';\n");
-	file_put_contents(TEMP_DIR . '/style4.css', "/* STYLE 4 */\n");
+	FileContent::create([
+		"@import 'http://example.com/';",
+		"@import 'style2.css';",
+		"@import 'dir/style3.css';",
+	])->write(TEMP_DIR . '/styles.css');
+
+	FileContent::create([
+		"/* STYLE 2 */",
+	])->write(TEMP_DIR . '/style2.css');
+
+	FileContent::create([
+		"/* STYLE 3 */",
+		"@import '../style4.css';",
+	])->write(TEMP_DIR . '/dir/style3.css');
+
+	FileContent::create([
+		"/* STYLE 4 */",
+	])->write(TEMP_DIR . '/style4.css');
 
 	$command->run($builder, 'styles.css');
 
-	Assert::same("@import 'http://example.com/';\n/* STYLE 2 */\n\n/* STYLE 3 */\n/* STYLE 4 */\n\n\n", file_get_contents(TEMP_DIR . '/styles.css'));
+	Assert::same(
+		FileContent::create([
+			"@import 'http://example.com/';",
+			"/* STYLE 2 */",
+			"",
+			"/* STYLE 3 */",
+			"/* STYLE 4 */",
+			"",
+			"",
+		])->toString(),
+		file_get_contents(TEMP_DIR . '/styles.css')
+	);
 
 	Assert::exception(function () use ($command, $builder) {
 		$command->run($builder);
