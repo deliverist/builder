@@ -41,7 +41,7 @@
 		private function processFile($path)
 		{
 			$content = file_get_contents($path);
-			file_put_contents($path, $this->expandCssImports($content, $path));
+			file_put_contents($path, rtrim($this->expandCssImports($content, $path), "\n") . "\n");
 		}
 
 
@@ -89,7 +89,7 @@
 					}
 				}
 
-				return $s;
+				return rtrim($s, "\n") . "\n";
 
 			}, $content);
 		}

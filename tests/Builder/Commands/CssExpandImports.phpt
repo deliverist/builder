@@ -101,7 +101,6 @@ test(function () {
 			"/* STYLE 3 */",
 			"/* STYLE 4 */",
 			"",
-			"",
 			"/* STYLE 5 */",
 			"",
 			"@media screen and (min-width: 50em) {",
@@ -112,7 +111,6 @@ test(function () {
 			"/* STYLE 7 */",
 			"@import 'style8.css'",
 			"}",
-			"",
 		])->toString(),
 		file_get_contents(TEMP_DIR . '/styles.css')
 	);
