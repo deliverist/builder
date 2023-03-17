@@ -3,10 +3,10 @@
 	namespace Deliverist\Builder\Commands;
 
 	use Deliverist\Builder\Builder;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 
 
-	class Remove implements ICommand
+	class Remove implements Command
 	{
 		/**
 		 * @param  string|string[] $paths

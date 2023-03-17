@@ -4,10 +4,10 @@
 
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\InvalidArgumentException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 
 
-	class GoogleAnalytics implements ICommand
+	class GoogleAnalytics implements Command
 	{
 		/**
 		 * @param  string $file

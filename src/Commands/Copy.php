@@ -4,11 +4,11 @@
 
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\InvalidArgumentException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 	use Nette\Utils\FileSystem;
 
 
-	class Copy implements ICommand
+	class Copy implements Command
 	{
 		/**
 		 * @param  string|string[] $source

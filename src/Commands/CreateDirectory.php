@@ -4,11 +4,11 @@
 
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\InvalidArgumentException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 	use Nette\Utils\FileSystem;
 
 
-	class CreateDirectory implements ICommand
+	class CreateDirectory implements Command
 	{
 		/**
 		 * @param  string|string[] $directories

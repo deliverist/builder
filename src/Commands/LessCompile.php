@@ -6,11 +6,11 @@
 	use Deliverist\Builder\FileSystemException;
 	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\InvalidStateException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 	use Nette\Utils\FileSystem;
 
 
-	class LessCompile implements ICommand
+	class LessCompile implements Command
 	{
 		/** @var string */
 		private $executable = 'lessc';

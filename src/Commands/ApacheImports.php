@@ -5,10 +5,10 @@
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\FileSystemException;
 	use Deliverist\Builder\InvalidArgumentException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 
 
-	class ApacheImports implements ICommand
+	class ApacheImports implements Command
 	{
 		/** @var string[] */
 		private $toRemove;

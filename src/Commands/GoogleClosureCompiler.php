@@ -6,10 +6,10 @@
 	use Deliverist\Builder\FileSystemException;
 	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\InvalidStateException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 
 
-	class GoogleClosureCompiler implements ICommand
+	class GoogleClosureCompiler implements Command
 	{
 		/**
 		 * @param  string|string[] $files

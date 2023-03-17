@@ -5,11 +5,11 @@
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\InvalidStateException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 	use Nette\Utils\FileSystem;
 
 
-	class PingUrl implements ICommand
+	class PingUrl implements Command
 	{
 		/**
 		 * @param  string $url

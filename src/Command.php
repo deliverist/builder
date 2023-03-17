@@ -3,7 +3,7 @@
 	namespace Deliverist\Builder;
 
 
-	interface ICommand
+	interface Command
 	{
 		/**
 		 * @return void

@@ -4,10 +4,10 @@
 
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\CommandException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 
 
-	class Rename implements ICommand
+	class Rename implements Command
 	{
 		/**
 		 * @param  string|string[] $from

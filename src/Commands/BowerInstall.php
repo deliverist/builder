@@ -4,10 +4,10 @@
 
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\InvalidStateException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 
 
-	class BowerInstall implements ICommand
+	class BowerInstall implements Command
 	{
 		/** @var string */
 		private $executable = 'bower';

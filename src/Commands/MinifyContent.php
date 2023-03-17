@@ -5,11 +5,11 @@
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\FileSystemException;
 	use Deliverist\Builder\InvalidArgumentException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 	use Nette\Utils\FileSystem;
 
 
-	class MinifyContent implements ICommand
+	class MinifyContent implements Command
 	{
 		/**
 		 * @param  string|string[] $files

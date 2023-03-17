@@ -6,7 +6,7 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 
-class TestCommand implements Deliverist\Builder\ICommand
+class TestCommand implements Deliverist\Builder\Command
 {
 	public $args;
 

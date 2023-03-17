@@ -4,10 +4,10 @@
 
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\InvalidStateException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 
 
-	class ComposerInstall implements ICommand
+	class ComposerInstall implements Command
 	{
 		/** @var string */
 		private $executable = 'composer';

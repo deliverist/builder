@@ -5,11 +5,11 @@
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\FileSystemException;
-	use Deliverist\Builder\ICommand;
+	use Deliverist\Builder\Command;
 	use Nette\Utils\FileSystem;
 
 
-	class ReplaceContent implements ICommand
+	class ReplaceContent implements Command
 	{
 		/**
 		 * @param  string $file

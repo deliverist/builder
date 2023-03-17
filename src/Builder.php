@@ -28,7 +28,7 @@
 		/** @var string */
 		private $directory;
 
-		/** @var array<string, ICommand> */
+		/** @var array<string, Command> */
 		private $commands;
 
 		/** @var Runner\Runner */
@@ -37,7 +37,7 @@
 
 		/**
 		 * @param  string $directory
-		 * @param  ICommand[] $commands
+		 * @param  Command[] $commands
 		 */
 		public function __construct($directory, array $commands = [])
 		{
@@ -58,7 +58,7 @@
 
 
 		/**
-		 * @param  string|ICommand|callable $command
+		 * @param  string|Command|callable $command
 		 * @param  mixed ...$args
 		 * @return self
 		 * @throws BuilderException
@@ -81,7 +81,7 @@
 
 			$this->fireEvent($this->onMake, [$commandName, self::MAKE_START]);
 
-			if ($cmd instanceof ICommand) {
+			if ($cmd instanceof Command) {
 				Callback::invokeArgs([$cmd, 'run'], $args);
 
 			} else {
