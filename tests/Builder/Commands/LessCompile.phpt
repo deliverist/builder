@@ -21,6 +21,7 @@ test(function () {
 
 	mkdir(dirname($inputPath), 0777, TRUE);
 	file_put_contents($inputPath, '');
+	file_put_contents($outputPath, ''); // lessc isnt run in real
 
 	$command->run($builder, 'www/components/styles.less');
 	$result = $builder->getRunnerResult();
