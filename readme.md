@@ -1,6 +1,8 @@
 
 # Deliverist\Builder
 
+<a href="https://www.janpecha.cz/donate/"><img src="https://buymecoffee.intm.org/img/donate-banner.v1.svg" alt="Donate" height="100"></a>
+
 ## Installation
 
 [Download a latest package](https://github.com/deliverist/builder/releases) or use [Composer](http://getcomposer.org/):
