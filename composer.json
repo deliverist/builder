@@ -13,7 +13,7 @@
 		{"type": "other", "url": "https://www.janpecha.cz/donate/"}
 	],
 	"require": {
-		"php": ">=5.4.0",
+		"php": ">=5.6.0",
 		"czproject/path-helper": "^4.0",
 		"czproject/runner": "^1.0",
 		"nette/utils": "^2.4"
@@ -22,6 +22,6 @@
 		"classmap": ["src/"]
 	},
 	"require-dev": {
-		"nette/tester": "^1.7"
+		"nette/tester": "^2.0"
 	}
 }
