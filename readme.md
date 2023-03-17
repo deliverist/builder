@@ -60,16 +60,6 @@ $builder->make('apache-imports', array(
 ```
 
 
-### BowerInstall
-
-Runs `bower install` in `bower.json` directory.
-
-``` php
-$builder->make('bower-install');
-$builder->make('bower-install', 'path/to/bower.json');
-```
-
-
 ### ComposerInstall
 
 Runs `composer install` in `composer.json` directory.
