@@ -59,10 +59,11 @@
 
 		/**
 		 * @param  string|ICommand|callable $command
+		 * @param  mixed ...$args
 		 * @return self
 		 * @throws BuilderException
 		 */
-		public function make($command/*, ...*/)
+		public function make($command, ...$args)
 		{
 			$cmd = $command;
 			$commandName = 'callback';
@@ -76,8 +77,6 @@
 				$cmd = $this->commands[$command];
 			}
 
-			$args = func_get_args();
-			array_shift($args);
 			array_unshift($args, $this);
 
 			$this->fireEvent($this->onMake, [$commandName, self::MAKE_START]);
