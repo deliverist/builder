@@ -21,7 +21,7 @@
 			}
 
 			if (!is_array($directories)) {
-				$directories = array($directories);
+				$directories = [$directories];
 			}
 
 			foreach ($directories as $directory) {

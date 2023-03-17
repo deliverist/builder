@@ -10,10 +10,10 @@ require __DIR__ . '/../../bootstrap.php';
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$log = array();
+	$log = [];
 	$builder = new Builder(TEMP_DIR);
 	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = array($message, $type);
+		$log[] = [$message, $type];
 	};
 	$command = new Commands\ApacheImports;
 

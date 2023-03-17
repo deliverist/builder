@@ -27,18 +27,18 @@
 			}
 
 			$parameters = $this->prepareParameters($file, $placeholder);
-			$script = array(
+			$script = [
 				'<script' . (isset($parameters['attributes']) ? (' ' . $parameters['attributes']) : '') . '>',
 				'ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;',
 				"ga('create'," . json_encode((string) $code) . ",'auto');ga('send','pageview');",
 				'</script>',
 				'<script src="https://www.google-analytics.com/analytics.js" async defer></script>',
-			);
+			];
 
 			$content = $builder->readFile($file);
-			$content = strtr($content, array(
+			$content = strtr($content, [
 				$parameters['placeholder'] => implode('', $script),
-			));
+			]);
 			$builder->writeFile($file, $content);
 		}
 
@@ -50,10 +50,10 @@
 		 */
 		private function prepareParameters($file, $placeholder)
 		{
-			$parameters = array(
+			$parameters = [
 				'attributes' => NULL,
 				'placeholder' => NULL,
-			);
+			];
 
 			$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 

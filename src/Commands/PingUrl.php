@@ -21,12 +21,12 @@
 				throw new InvalidArgumentException("Missing parameter 'url'.");
 			}
 
-			$options = array(
-				'ssl' => array(
+			$options = [
+				'ssl' => [
 					'verify_peer' => $validateSsl,
 					'verify_peer_name' => $validateSsl,
-				),
-			);
+				],
+			];
 
 			$err = ($out = @file_get_contents($url, FALSE, stream_context_create($options))) === FALSE;
 

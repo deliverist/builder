@@ -48,13 +48,13 @@
 				throw new \Deliverist\Builder\InvalidStateException("Reading of file $path failed.");
 			}
 
-			$output = @file_get_contents('https://closure-compiler.appspot.com/compile', FALSE, stream_context_create(array(
-				'http' => array(
+			$output = @file_get_contents('https://closure-compiler.appspot.com/compile', FALSE, stream_context_create([
+				'http' => [
 					'method' => 'POST',
 					'header' => 'Content-type: application/x-www-form-urlencoded',
 					'content' => 'output_info=compiled_code&js_code=' . urlencode($content),
-				)
-			)));
+				]
+			]));
 
 			if (!is_string($output)) {
 				$error = error_get_last();

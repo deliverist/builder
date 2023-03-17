@@ -21,7 +21,7 @@
 			}
 
 			if (!is_array($files)) {
-				$files = array($files);
+				$files = [$files];
 			}
 
 			foreach ($files as $file) {

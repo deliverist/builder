@@ -11,10 +11,10 @@
 		/**
 		 * @param  string|string[] $paths
 		 */
-		public function run(Builder $builder, $paths = array())
+		public function run(Builder $builder, $paths = [])
 		{
 			if (!is_array($paths)) {
-				$paths = array($paths);
+				$paths = [$paths];
 			}
 
 			foreach ($paths as $path) {

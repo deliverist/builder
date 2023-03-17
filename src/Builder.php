@@ -39,7 +39,7 @@
 		 * @param  string $directory
 		 * @param  ICommand[] $commands
 		 */
-		public function __construct($directory, array $commands = array())
+		public function __construct($directory, array $commands = [])
 		{
 			$this->directory = PathHelper::absolutizePath($directory);
 			$this->commands = $commands;
@@ -80,16 +80,16 @@
 			array_shift($args);
 			array_unshift($args, $this);
 
-			$this->fireEvent($this->onMake, array($commandName, self::MAKE_START));
+			$this->fireEvent($this->onMake, [$commandName, self::MAKE_START]);
 
 			if ($cmd instanceof ICommand) {
-				Callback::invokeArgs(array($cmd, 'run'), $args);
+				Callback::invokeArgs([$cmd, 'run'], $args);
 
 			} else {
 				Callback::invokeArgs($cmd, $args);
 			}
 
-			$this->fireEvent($this->onMake, array($commandName, self::MAKE_END));
+			$this->fireEvent($this->onMake, [$commandName, self::MAKE_END]);
 
 			return $this;
 		}
@@ -144,7 +144,7 @@
 		 */
 		public function log($message, $type = self::INFO)
 		{
-			$this->fireEvent($this->onLog, array($message, $type));
+			$this->fireEvent($this->onLog, [$message, $type]);
 			return $this;
 		}
 
@@ -204,7 +204,7 @@
 		 * @param  array<mixed> $args
 		 * @return void
 		 */
-		private function fireEvent($handlers, array $args = array())
+		private function fireEvent($handlers, array $args = [])
 		{
 			if (!is_array($handlers)) {
 				return;

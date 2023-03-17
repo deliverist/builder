@@ -44,14 +44,14 @@
 
 			$info = pathinfo($path);
 			$newPath = (isset($info['dirname']) ? $info['dirname'] : '') . '/' . $info['filename'] . '.css';
-			$result = $builder->execute(array(
+			$result = $builder->execute([
 				$this->executable,
 				'-ru',
 				'--clean-css', // TODO: option??
 				'--no-color',
 				$path,
 				$newPath,
-			));
+			]);
 
 			$builder->logDebug($result->toText());
 

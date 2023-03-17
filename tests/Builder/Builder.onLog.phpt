@@ -8,7 +8,7 @@ require __DIR__ . '/../bootstrap.php';
 
 test(function () {
 
-	$output = array();
+	$output = [];
 	$builder = new Builder(__DIR__);
 	$builder->onLog[] = function ($message, $type) use (&$output) {
 		$output[] = "$type: $message";
@@ -20,12 +20,12 @@ test(function () {
 	$builder->logError('ERROR');
 	$builder->logSuccess('SUCCESS');
 
-	Assert::same(array(
+	Assert::same([
 		Builder::INFO . ": Lorem\nIpsum\n",
 		Builder::DEBUG . ': DEBUG',
 		Builder::WARNING . ': WARNING',
 		Builder::ERROR . ': ERROR',
 		Builder::SUCCESS . ': SUCCESS',
-	), $output);
+	], $output);
 
 });

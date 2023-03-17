@@ -10,10 +10,10 @@ require __DIR__ . '/../../libs/TestBuilder.php';
 
 test(function () {
 
-	$log = array();
+	$log = [];
 	$builder = new TestBuilder(TEMP_DIR);
 	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = array($message, $type);
+		$log[] = [$message, $type];
 	};
 	$command = new Commands\BowerInstall;
 
@@ -24,10 +24,10 @@ test(function () {
 	$command->run($builder, 'www/components/bower.json');
 	$result = $builder->getRunnerResult();
 
-	Assert::same(array(
-		array('Running `bower install`', Builder::INFO),
-		array("$ 'bower' 'install'\n\nDirectory: .\n\n=> 0\n\n", Builder::DEBUG),
-		array('Running `bower install`', Builder::INFO),
-		array("$ '/bin/bower' 'install'\n\nDirectory: www/components\n\n=> 0\n\n", Builder::DEBUG),
-	), $log);
+	Assert::same([
+		['Running `bower install`', Builder::INFO],
+		["$ 'bower' 'install'\n\nDirectory: .\n\n=> 0\n\n", Builder::DEBUG],
+		['Running `bower install`', Builder::INFO],
+		["$ '/bin/bower' 'install'\n\nDirectory: www/components\n\n=> 0\n\n", Builder::DEBUG],
+	], $log);
 });

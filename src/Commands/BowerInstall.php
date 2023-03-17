@@ -30,10 +30,10 @@
 		public function run(Builder $builder, $file = 'bower.json')
 		{
 			$builder->log('Running `bower install`');
-			$result = $builder->execute(array(
+			$result = $builder->execute([
 				$this->executable,
 				'install',
-			), dirname($file));
+			], dirname($file));
 
 			$builder->logDebug($result->toText());
 

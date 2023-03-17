@@ -24,10 +24,10 @@
 				throw new InvalidArgumentException("Missing parameter 'files'.");
 			}
 
-			$this->toRemove = array();
+			$this->toRemove = [];
 
 			if (!is_array($files)) {
-				$files = array($files);
+				$files = [$files];
 			}
 
 			foreach ($files as $file) {

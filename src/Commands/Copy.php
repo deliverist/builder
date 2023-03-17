@@ -20,7 +20,7 @@
 				throw new InvalidArgumentException("Missing parameter 'source'.");
 			}
 
-			$paths = array();
+			$paths = [];
 
 			if (is_array($source)) {
 				$paths = $source;

@@ -37,10 +37,10 @@ test(function () {
 	Assert::false(file_exists(TEMP_DIR . '/www/index.php'));
 	Assert::false(file_exists(TEMP_DIR . '/app/config.php'));
 
-	$command->run($builder, array(
+	$command->run($builder, [
 		'index.php' => 'www/index.php',
 		'config.php' => 'app/config.php',
-	));
+	]);
 	Assert::false(file_exists(TEMP_DIR . '/index.php'));
 	Assert::false(file_exists(TEMP_DIR . '/config.php'));
 	Assert::true(file_exists(TEMP_DIR . '/www/index.php'));

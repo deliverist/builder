@@ -10,10 +10,10 @@ require __DIR__ . '/../../bootstrap.php';
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$log = array();
+	$log = [];
 	$builder = new Builder(TEMP_DIR);
 	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = array($message, $type);
+		$log[] = [$message, $type];
 	};
 	$command = new Commands\MinifyContent;
 
@@ -32,7 +32,7 @@ test(function () {
 
 	$command->run($builder, 'test.txt');
 
-	Assert::same(implode("\n", array(
+	Assert::same(implode("\n", [
 		'{block content}',
 		'<h1>Lorem ipsum</h1>',
 		'<p>',
@@ -43,7 +43,7 @@ test(function () {
 		'</p>',
 		'{/block}',
 		'',
-	)), file_get_contents($path));
+	]), file_get_contents($path));
 
 	Assert::exception(function () use ($command, $builder) {
 		$command->run($builder);

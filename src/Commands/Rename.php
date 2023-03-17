@@ -20,7 +20,7 @@
 				throw new RenameException("Missing parameter 'from'.");
 			}
 
-			$paths = array();
+			$paths = [];
 
 			if (is_array($from)) {
 				$paths = $from;

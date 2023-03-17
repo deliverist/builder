@@ -38,7 +38,7 @@
 		public function run($command, $subdirectory = NULL)
 		{
 			$cmd = is_string($command) ? $command : $this->processCommand($command);
-			$result = new CzProject\Runner\RunnerResult($cmd, 0, array('Directory: ' . $subdirectory));
+			$result = new CzProject\Runner\RunnerResult($cmd, 0, ['Directory: ' . $subdirectory]);
 			$this->lastResult = $result;
 			return $result;
 		}

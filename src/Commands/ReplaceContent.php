@@ -15,7 +15,7 @@
 		 * @param  string $file
 		 * @param  array<string, string> $replacements
 		 */
-		public function run(Builder $builder, $file = NULL, array $replacements = array())
+		public function run(Builder $builder, $file = NULL, array $replacements = [])
 		{
 			if (!isset($file)) {
 				throw new InvalidArgumentException("Missing parameter 'file'.");

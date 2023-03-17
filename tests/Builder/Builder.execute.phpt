@@ -9,13 +9,13 @@ require __DIR__ . '/../libs/TestBuilder.php';
 test(function () {
 
 	$builder = new TestBuilder(TEMP_DIR);
-	$result = $builder->execute(array(
+	$result = $builder->execute([
 		'rm',
 		'-rf',
 		'/',
-	));
+	]);
 
 	Assert::same("'rm' '-rf' '/'", $result->getCommand());
-	Assert::same(array("Directory: "), $result->getOutput());
+	Assert::same(["Directory: "], $result->getOutput());
 
 });

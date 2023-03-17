@@ -10,10 +10,10 @@ require __DIR__ . '/../../libs/TestBuilder.php';
 
 test(function () {
 
-	$log = array();
+	$log = [];
 	$builder = new TestBuilder(TEMP_DIR);
 	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = array($message, $type);
+		$log[] = [$message, $type];
 	};
 	$command = new Commands\LessCompile;
 	$inputPath = TEMP_DIR . '/www/components/styles.less';
@@ -30,10 +30,10 @@ test(function () {
 	$command->run($builder, 'www/components/styles.less');
 	$result = $builder->getRunnerResult();
 
-	Assert::same(array(
-		array("$ 'lessc' '-ru' '--clean-css' '--no-color' '$inputPath' '$outputPath'\n\nDirectory: \n\n=> 0\n\n", Builder::DEBUG),
-		array("$ '/bin/lessc' '-ru' '--clean-css' '--no-color' '$inputPath' '$outputPath'\n\nDirectory: \n\n=> 0\n\n", Builder::DEBUG),
-	), $log);
+	Assert::same([
+		["$ 'lessc' '-ru' '--clean-css' '--no-color' '$inputPath' '$outputPath'\n\nDirectory: \n\n=> 0\n\n", Builder::DEBUG],
+		["$ '/bin/lessc' '-ru' '--clean-css' '--no-color' '$inputPath' '$outputPath'\n\nDirectory: \n\n=> 0\n\n", Builder::DEBUG],
+	], $log);
 
 	Assert::exception(function () use ($command, $builder) {
 		$command->run($builder);

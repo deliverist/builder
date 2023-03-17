@@ -13,7 +13,7 @@ class TestCommand implements Deliverist\Builder\ICommand
 
 	public function run(Deliverist\Builder\Builder $builder, $argument1 = NULL, $argument2 = NULL)
 	{
-		$this->args = array($argument1, $argument2);
+		$this->args = [$argument1, $argument2];
 	}
 }
 
@@ -21,66 +21,66 @@ class TestCommand implements Deliverist\Builder\ICommand
 test(function () {
 
 	$testCommand = new TestCommand;
-	$makeLog = array();
-	$builder = new Builder(TEMP_DIR, array(
+	$makeLog = [];
+	$builder = new Builder(TEMP_DIR, [
 		'testCommand' => $testCommand,
-	));
+	]);
 	$builder->onMake[] = function ($commandName, $type) use (&$makeLog) {
-		$makeLog[] = array($commandName, $type);
+		$makeLog[] = [$commandName, $type];
 	};
 
 	$builder->make('testCommand');
-	Assert::same(array(NULL, NULL), $testCommand->args);
-	Assert::same(array(
-		array('testCommand', Builder::MAKE_START),
-		array('testCommand', Builder::MAKE_END),
-	), $makeLog);
+	Assert::same([NULL, NULL], $testCommand->args);
+	Assert::same([
+		['testCommand', Builder::MAKE_START],
+		['testCommand', Builder::MAKE_END],
+	], $makeLog);
 
 	$builder->make('testCommand', NULL, 'TEST');
-	Assert::same(array(NULL, 'TEST'), $testCommand->args);
+	Assert::same([NULL, 'TEST'], $testCommand->args);
 
 });
 
 
 test(function () { // closure
 
-	$makeLog = array();
-	$closureArgs = array();
+	$makeLog = [];
+	$closureArgs = [];
 	$closure = function (Builder $builder, $arg = NULL) use (&$closureArgs) {
 		$closureArgs = func_get_args();
 		array_shift($closureArgs);
 	};
-	$builder = new Builder(TEMP_DIR, array(
+	$builder = new Builder(TEMP_DIR, [
 		'closureCmd' => $closure,
-	));
+	]);
 	$builder->onMake[] = function ($commandName, $type) use (&$makeLog) {
-		$makeLog[] = array($commandName, $type);
+		$makeLog[] = [$commandName, $type];
 	};
 
 
 	$builder->make('closureCmd');
-	Assert::same(array(), $closureArgs);
-	Assert::same(array(
-		array('closureCmd', Builder::MAKE_START),
-		array('closureCmd', Builder::MAKE_END),
-	), $makeLog);
+	Assert::same([], $closureArgs);
+	Assert::same([
+		['closureCmd', Builder::MAKE_START],
+		['closureCmd', Builder::MAKE_END],
+	], $makeLog);
 
 
 	$builder->make('closureCmd', 'ARG1', 'ARG2');
-	Assert::same(array('ARG1', 'ARG2'), $closureArgs);
+	Assert::same(['ARG1', 'ARG2'], $closureArgs);
 
 
-	$makeLog = array();
+	$makeLog = [];
 	$builder->make($closure);
-	Assert::same(array(), $closureArgs);
-	Assert::same(array(
-		array('callback', Builder::MAKE_START),
-		array('callback', Builder::MAKE_END),
-	), $makeLog);
+	Assert::same([], $closureArgs);
+	Assert::same([
+		['callback', Builder::MAKE_START],
+		['callback', Builder::MAKE_END],
+	], $makeLog);
 
 
 	$builder->make($closure, 'ARG1', 'ARG2');
-	Assert::same(array('ARG1', 'ARG2'), $closureArgs);
+	Assert::same(['ARG1', 'ARG2'], $closureArgs);
 
 });
 

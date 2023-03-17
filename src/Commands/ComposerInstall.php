@@ -32,7 +32,7 @@
 			$builder->log('Running `composer install`');
 
 			// http://stackoverflow.com/a/21921309
-			$result = $builder->execute(array(
+			$result = $builder->execute([
 				$this->executable,
 				'install',
 				'--no-ansi',
@@ -42,7 +42,7 @@
 				// '--no-scripts',
 				'--optimize-autoloader',
 				'--prefer-dist',
-			), dirname($file));
+			], dirname($file));
 
 			$builder->logDebug($result->toText());
 

@@ -10,10 +10,10 @@ require __DIR__ . '/../../libs/TestBuilder.php';
 
 test(function () {
 
-	$log = array();
+	$log = [];
 	$builder = new TestBuilder(TEMP_DIR);
 	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = array($message, $type);
+		$log[] = [$message, $type];
 	};
 	$command = new Commands\GoogleClosureCompiler;
 
@@ -28,10 +28,10 @@ test(function () {
 	}, 'Deliverist\Builder\FileSystemException', "File 'not-found.js' not found.");
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, array(
+		$command->run($builder, [
 			'not-found-1.js',
 			'not-found-2.js',
-		));
+		]);
 
 	}, 'Deliverist\Builder\FileSystemException', "File 'not-found-1.js' not found.");
 

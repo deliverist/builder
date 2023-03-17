@@ -10,10 +10,10 @@ require __DIR__ . '/../../bootstrap.php';
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$log = array();
+	$log = [];
 	$builder = new Builder(TEMP_DIR);
 	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = array($message, $type);
+		$log[] = [$message, $type];
 	};
 	$command = new Commands\GoogleAnalytics;
 
@@ -25,7 +25,7 @@ test(function () {
 	$command->run($builder, 'template.latte', 'TEST-LATTE');
 	$command->run($builder, 'template.html', 'TEST-HTML');
 
-	Assert::same(implode('', array(
+	Assert::same(implode('', [
 		"\n",
 		'<script>',
 		'ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;',
@@ -33,9 +33,9 @@ test(function () {
 		'</script>',
 		'<script src="https://www.google-analytics.com/analytics.js" async defer></script>',
 		"\n",
-	)), file_get_contents(TEMP_DIR . '/template.php'));
+	]), file_get_contents(TEMP_DIR . '/template.php'));
 
-	Assert::same(implode('', array(
+	Assert::same(implode('', [
 		"\n",
 		'<script n:syntax="off">',
 		'ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;',
@@ -43,9 +43,9 @@ test(function () {
 		'</script>',
 		'<script src="https://www.google-analytics.com/analytics.js" async defer></script>',
 		"\n",
-	)), file_get_contents(TEMP_DIR . '/template.latte'));
+	]), file_get_contents(TEMP_DIR . '/template.latte'));
 
-	Assert::same(implode('', array(
+	Assert::same(implode('', [
 		"\n",
 		'<script>',
 		'ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;',
@@ -53,13 +53,13 @@ test(function () {
 		'</script>',
 		'<script src="https://www.google-analytics.com/analytics.js" async defer></script>',
 		"\n",
-	)), file_get_contents(TEMP_DIR . '/template.html'));
+	]), file_get_contents(TEMP_DIR . '/template.html'));
 
-	Assert::same(array(
-		array("Inserting Google Analytics code 'TEST-PHP' into 'template.php'.", Builder::INFO),
-		array("Inserting Google Analytics code 'TEST-LATTE' into 'template.latte'.", Builder::INFO),
-		array("Inserting Google Analytics code 'TEST-HTML' into 'template.html'.", Builder::INFO),
-	), $log);
+	Assert::same([
+		["Inserting Google Analytics code 'TEST-PHP' into 'template.php'.", Builder::INFO],
+		["Inserting Google Analytics code 'TEST-LATTE' into 'template.latte'.", Builder::INFO],
+		["Inserting Google Analytics code 'TEST-HTML' into 'template.html'.", Builder::INFO],
+	], $log);
 
 });
 

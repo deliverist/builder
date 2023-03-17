@@ -10,10 +10,10 @@ require __DIR__ . '/../../bootstrap.php';
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$log = array();
+	$log = [];
 	$builder = new Builder(TEMP_DIR);
 	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = array($message, $type);
+		$log[] = [$message, $type];
 	};
 	$command = new Commands\Copy;
 
@@ -22,10 +22,10 @@ test(function () {
 	file_put_contents(TEMP_DIR . '/source-3.txt', '');
 
 	$command->run($builder, 'source-1.txt', 'destination-1.txt');
-	$command->run($builder, array(
+	$command->run($builder, [
 		'source-2.txt' => 'destination-2.txt',
 		'source-3.txt' => 'destination-3.txt'
-	));
+	]);
 
 	Assert::true(is_file(TEMP_DIR . '/destination-1.txt'));
 	Assert::true(is_file(TEMP_DIR . '/destination-2.txt'));
