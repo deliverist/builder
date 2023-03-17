@@ -10,14 +10,13 @@
 
 	class ApacheImports implements ICommand
 	{
-		/** @var array */
+		/** @var string[] */
 		private $toRemove;
 
 
 		/**
-		 * @param  Builder
-		 * @param  string|string[]
-		 * @param  bool|NULL
+		 * @param  string|string[] $files
+		 * @param  bool|NULL $removeFiles
 		 */
 		public function run(Builder $builder, $files = NULL, $removeFiles = TRUE)
 		{
@@ -49,22 +48,42 @@
 		}
 
 
+		/**
+		 * @param  string $path
+		 * @return void
+		 */
 		private function processFile($path)
 		{
 			$content = file_get_contents($path);
+
+			if ($content === FALSE) {
+				throw new \Deliverist\Builder\InvalidStateException("Reading of file $path failed.");
+			}
+
 			file_put_contents($path, $this->expandApacheImports($content, $path));
 		}
 
 
+		/**
+		 * @param  string $content
+		 * @param  string $path
+		 * @return string
+		 */
 		private function expandApacheImports($content, $path)
 		{
 			$dir = dirname($path);
-			return preg_replace_callback('~<!--#include\s+file="(.+)"\s+-->~U', function ($m) use ($dir, $path) {
+			return (string) preg_replace_callback('~<!--#include\s+file="(.+)"\s+-->~U', function ($m) use ($dir) {
 				$file = $dir . '/' . $m[1];
 
 				if (is_file($file)) {
 					$this->toRemove[] = $file;
-					return $this->expandApacheImports(file_get_contents($file), $file);
+					$fileContent = file_get_contents($file);
+
+					if ($fileContent === FALSE) {
+						throw new \Deliverist\Builder\InvalidStateException("Reading of file $file failed.");
+					}
+
+					return $this->expandApacheImports($fileContent, $file);
 
 				} else {
 					throw new FileSystemException("Required file '" . $m[1] . "' is missing.");

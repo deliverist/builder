@@ -9,8 +9,7 @@
 	class Remove implements ICommand
 	{
 		/**
-		 * @param  Builder
-		 * @param  string|string[]
+		 * @param  string|string[] $paths
 		 */
 		public function run(Builder $builder, $paths = array())
 		{

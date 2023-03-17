@@ -17,8 +17,8 @@
 
 
 		/**
-		 * @param  string
-		 * @param  self
+		 * @param  string $executable
+		 * @return self
 		 */
 		public function setExecutable($executable)
 		{
@@ -28,8 +28,7 @@
 
 
 		/**
-		 * @param  Builder
-		 * @param  string
+		 * @param  string $file
 		 */
 		public function run(Builder $builder, $file = NULL)
 		{
@@ -44,18 +43,19 @@
 			}
 
 			$info = pathinfo($path);
+			$newPath = (isset($info['dirname']) ? $info['dirname'] : '') . '/' . $info['filename'] . '.css';
 			$result = $builder->execute(array(
 				$this->executable,
 				'-ru',
 				'--clean-css', // TODO: option??
 				'--no-color',
 				$path,
-				$info['dirname'] . '/' . $info['filename'] . '.css',
+				$newPath,
 			));
 
 			$builder->logDebug($result->toText());
 
-			if ($result->getCode() !== 0 || !is_file($path)) {
+			if ($result->getCode() !== 0 || !is_file($newPath)) {
 				throw new InvalidStateException("Compile LESS for file $file failed.");
 			}
 		}

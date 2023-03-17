@@ -12,9 +12,8 @@
 	class PingUrl implements ICommand
 	{
 		/**
-		 * @param  Builder
-		 * @param  string
-		 * @param  bool
+		 * @param  string $url
+		 * @param  bool $validateSsl
 		 */
 		public function run(Builder $builder, $url = NULL, $validateSsl = TRUE)
 		{
@@ -33,10 +32,18 @@
 
 			if ($err) {
 				$error = error_get_last();
-				$builder->logError('Error type ' . $error['type']);
-				$builder->logError($error['message']);
-				$builder->logError('in file ' . $error['file'] . ':' . $error['line']);
+
+				if ($error !== NULL) {
+					$builder->logError('Error type ' . $error['type']);
+					$builder->logError($error['message']);
+					$builder->logError('in file ' . $error['file'] . ':' . $error['line']);
+				}
+
 				throw new InvalidStateException('URL is unreachable ' . $url);
+			}
+
+			if (!is_string($out)) {
+				throw new InvalidStateException("Reading of URL $url failed.");
 			}
 
 			$out = strip_tags($out);

@@ -12,9 +12,8 @@
 	class ReplaceContent implements ICommand
 	{
 		/**
-		 * @param  Builder
-		 * @param  string
-		 * @param  array
+		 * @param  string $file
+		 * @param  array<string, string> $replacements
 		 */
 		public function run(Builder $builder, $file = NULL, array $replacements = array())
 		{
@@ -29,6 +28,11 @@
 			}
 
 			$content = file_get_contents($path);
+
+			if ($content === FALSE) {
+				throw new \Deliverist\Builder\InvalidStateException("Reading of file $path failed.");
+			}
+
 			$content = strtr($content, $replacements);
 			file_put_contents($path, $content);
 		}

@@ -11,9 +11,8 @@
 	class Copy implements ICommand
 	{
 		/**
-		 * @param  Builder
-		 * @param  string|string[]
-		 * @param  string|NULL
+		 * @param  string|string[] $source
+		 * @param  string|NULL $destination
 		 */
 		public function run(Builder $builder, $source = NULL, $destination = NULL)
 		{

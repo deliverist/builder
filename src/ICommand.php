@@ -6,7 +6,7 @@
 	interface ICommand
 	{
 		/**
-		 * @param  Builder
+		 * @return void
 		 */
 		function run(Builder $builder/* , ...args */);
 	}

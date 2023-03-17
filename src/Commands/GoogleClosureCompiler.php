@@ -12,9 +12,7 @@
 	class GoogleClosureCompiler implements ICommand
 	{
 		/**
-		 * @param  Builder
-		 * @param  string|string[]
-		 * @param  string|NULL
+		 * @param  string|string[] $files
 		 */
 		public function run(Builder $builder, $files = NULL)
 		{
@@ -38,9 +36,18 @@
 		}
 
 
+		/**
+		 * @param  string $path
+		 * @return void
+		 */
 		private function compressFile($path)
 		{
 			$content = file_get_contents($path);
+
+			if ($content === FALSE) {
+				throw new \Deliverist\Builder\InvalidStateException("Reading of file $path failed.");
+			}
+
 			$output = @file_get_contents('https://closure-compiler.appspot.com/compile', FALSE, stream_context_create(array(
 				'http' => array(
 					'method' => 'POST',
@@ -51,7 +58,12 @@
 
 			if (!is_string($output)) {
 				$error = error_get_last();
-				throw new InvalidStateException("Unable to minfy: {$error['message']}\n");
+
+				if ($error !== NULL) {
+					throw new InvalidStateException("Unable to minify: {$error['message']}");
+				}
+
+				throw new InvalidStateException("Unable to minify");
 			}
 
 			file_put_contents($path, $output);

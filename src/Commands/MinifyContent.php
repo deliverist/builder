@@ -12,8 +12,7 @@
 	class MinifyContent implements ICommand
 	{
 		/**
-		 * @param  Builder
-		 * @param  string|string[]
+		 * @param  string|string[] $files
 		 */
 		public function run(Builder $builder, $files = NULL)
 		{
@@ -34,6 +33,11 @@
 				}
 
 				$lines = file($path);
+
+				if ($lines === FALSE) {
+					throw new \Deliverist\Builder\InvalidStateException("Reading of file $path failed.");
+				}
+
 				$lines = array_map('trim', $lines);
 				$lines = array_filter($lines, function ($line) { // remove empty lines
 					return $line !== '';

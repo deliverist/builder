@@ -19,16 +19,16 @@
 		const MAKE_START = 0;
 		const MAKE_END = 1;
 
-		/** @var callback[]  (message, type) */
+		/** @var callable[]  (message, type) */
 		public $onLog;
 
-		/** @var callback[]  (command name, type self::MAKE_*) */
+		/** @var callable[]  (command name, type self::MAKE_*) */
 		public $onMake;
 
 		/** @var string */
 		private $directory;
 
-		/** @var array  [name => command] */
+		/** @var array<string, ICommand> */
 		private $commands;
 
 		/** @var Runner\Runner */
@@ -36,8 +36,8 @@
 
 
 		/**
-		 * @param  string
-		 * @param  ICommand[]
+		 * @param  string $directory
+		 * @param  ICommand[] $commands
 		 */
 		public function __construct($directory, array $commands = array())
 		{
@@ -48,7 +48,7 @@
 
 
 		/**
-		 * @param  string|NULL
+		 * @param  string|NULL $path
 		 * @return string
 		 */
 		public function getPath($path = NULL)
@@ -58,7 +58,7 @@
 
 
 		/**
-		 * @param  string|ICommand|callback
+		 * @param  string|ICommand|callable $command
 		 * @return self
 		 * @throws BuilderException
 		 */
@@ -96,8 +96,8 @@
 
 
 		/**
-		 * @param  string|array
-		 * @param  string|NULL
+		 * @param  string|string[] $cmd
+		 * @param  string|NULL $subdir
 		 * @return Runner\RunnerResult
 		 */
 		public function execute($cmd, $subdir = NULL)
@@ -107,7 +107,7 @@
 
 
 		/**
-		 * @param  string
+		 * @param  string $file
 		 * @return string
 		 */
 		public function readFile($file)
@@ -117,8 +117,8 @@
 
 
 		/**
-		 * @param  string
-		 * @param  string
+		 * @param  string $file
+		 * @param  string $content
 		 * @return void
 		 */
 		public function writeFile($file, $content)
@@ -128,7 +128,7 @@
 
 
 		/**
-		 * @param  string
+		 * @param  string $path
 		 * @return void
 		 */
 		public function delete($path)
@@ -138,8 +138,8 @@
 
 
 		/**
-		 * @param  string
-		 * @param  int
+		 * @param  string $message
+		 * @param  int $type
 		 * @return self
 		 */
 		public function log($message, $type = self::INFO)
@@ -150,7 +150,7 @@
 
 
 		/**
-		 * @param  string
+		 * @param  string $message
 		 * @return self
 		 */
 		public function logDebug($message)
@@ -160,7 +160,7 @@
 
 
 		/**
-		 * @param  string
+		 * @param  string $message
 		 * @return self
 		 */
 		public function logWarning($message)
@@ -170,7 +170,7 @@
 
 
 		/**
-		 * @param  string
+		 * @param  string $message
 		 * @return self
 		 */
 		public function logError($message)
@@ -180,7 +180,7 @@
 
 
 		/**
-		 * @param  string
+		 * @param  string $message
 		 * @return self
 		 */
 		public function logSuccess($message)
@@ -190,7 +190,7 @@
 
 
 		/**
-		 * @param  string
+		 * @param  string $directory
 		 * @return Runner\Runner
 		 */
 		protected function createRunner($directory)
@@ -200,8 +200,8 @@
 
 
 		/**
-		 * @param  array|NULL
-		 * @param  array
+		 * @param  callable[]|NULL $handlers
+		 * @param  array<mixed> $args
 		 * @return void
 		 */
 		private function fireEvent($handlers, array $args = array())

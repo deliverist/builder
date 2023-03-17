@@ -10,9 +10,8 @@
 	class Rename implements ICommand
 	{
 		/**
-		 * @param  Builder
-		 * @param  string|string[]
-		 * @param  string|NULL
+		 * @param  string|string[] $from
+		 * @param  string|NULL $to
 		 * @throws RenameException
 		 */
 		public function run(Builder $builder, $from = NULL, $to = NULL)

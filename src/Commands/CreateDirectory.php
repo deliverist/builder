@@ -11,8 +11,7 @@
 	class CreateDirectory implements ICommand
 	{
 		/**
-		 * @param  Builder
-		 * @param  string|string[]
+		 * @param  string|string[] $directories
 		 * @throws InvalidArgumentException
 		 */
 		public function run(Builder $builder, $directories = NULL)

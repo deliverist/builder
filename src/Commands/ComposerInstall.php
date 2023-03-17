@@ -14,8 +14,8 @@
 
 
 		/**
-		 * @param  string
-		 * @param  self
+		 * @param  string $executable
+		 * @return self
 		 */
 		public function setExecutable($executable)
 		{
@@ -25,8 +25,7 @@
 
 
 		/**
-		 * @param  Builder
-		 * @param  string
+		 * @param  string $file
 		 */
 		public function run(Builder $builder, $file = 'composer.json')
 		{

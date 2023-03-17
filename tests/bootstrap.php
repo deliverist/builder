@@ -10,7 +10,10 @@ define('TEMP_DIR', __DIR__ . '/tmp/' . getmypid());
 Tester\Helpers::purge(TEMP_DIR);
 
 
-function test($cb)
+/**
+ * @return void
+ */
+function test(callable $cb)
 {
 	$cb();
 }

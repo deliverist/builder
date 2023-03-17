@@ -12,9 +12,7 @@
 	class CssExpandImports implements ICommand
 	{
 		/**
-		 * @param  Builder
-		 * @param  string|string[]
-		 * @param  bool|NULL
+		 * @param  string|string[] $files
 		 */
 		public function run(Builder $builder, $files = NULL)
 		{
@@ -38,16 +36,26 @@
 		}
 
 
+		/**
+		 * @param  string $path
+		 * @return void
+		 */
 		private function processFile($path)
 		{
 			$content = file_get_contents($path);
+
+			if ($content === FALSE) {
+				throw new \Deliverist\Builder\InvalidStateException("Reading of file $path failed.");
+			}
+
 			file_put_contents($path, rtrim($this->expandCssImports($content, $path), "\n") . "\n");
 		}
 
 
 		/**
-		 * @param  string
-		 * @param  string
+		 * @param  string $content
+		 * @param  string $origFile
+		 * @param  string $currentMediaQuery
 		 * @return string
 		 * @see    https://github.com/dg/ftp-deployment/blob/bf1cffb597896dd0d05cded01a9c3a16596c506d/src/Deployment/Preprocessor.php#L104
 		 */
@@ -55,7 +63,7 @@
 		{
 			$dir = dirname($origFile);
 
-			return preg_replace_callback('#@import\s+(?:url)?[(\'"]+(.+)[)\'"]+(\s+.+)?;#U', function ($m) use ($dir, $currentMediaQuery) {
+			return (string) preg_replace_callback('#@import\s+(?:url)?[(\'"]+(.+)[)\'"]+(\s+.+)?;#U', function ($m) use ($dir, $currentMediaQuery) {
 				$file = $dir . '/' . $m[1];
 
 				if (!is_file($file)) {
@@ -63,6 +71,11 @@
 				}
 
 				$s = file_get_contents($file);
+
+				if ($s === FALSE) {
+					throw new \Deliverist\Builder\InvalidStateException("Reading of file $file failed.");
+				}
+
 				$newDir = dirname($file);
 				$mediaQuery = isset($m[2]) ? $this->normalizeMediaQuery($m[2]) : NULL;
 
@@ -83,6 +96,10 @@
 
 					if (substr($newDir, 0, strlen($tmp)) === $tmp) {
 						$s = preg_replace('#\burl\(["\']?(?=[.\w])(?!\w+:)#', '$0' . substr($newDir, strlen($tmp)) . '/', $s);
+
+						if ($s === NULL) {
+							throw new \Deliverist\Builder\InvalidStateException("Replacing of content failed.");
+						}
 
 					} elseif (strpos($s, 'url(') !== FALSE) {
 						return $m[0];

@@ -2,9 +2,18 @@
 
 	class TestBuilder extends Deliverist\Builder\Builder
 	{
+		/**
+		 * @return \CzProject\Runner\RunnerResult|NULL
+		 */
 		public function getRunnerResult()
 		{
-			return $this->runner->lastResult;
+			$runner = $this->runner;
+
+			if (!($runner instanceof TestRunner)) {
+				throw new \Deliverist\Builder\InvalidStateException('Requires TestRunner instance.');
+			}
+
+			return $runner->lastResult;
 		}
 
 
@@ -17,9 +26,15 @@
 
 	class TestRunner extends CzProject\Runner\Runner
 	{
-		public $lastResult;
+		/** @var \CzProject\Runner\RunnerResult|NULL */
+		public $lastResult = NULL;
 
 
+		/**
+		 * @param  string|string[] $command
+		 * @param  string $subdirectory
+		 * @return \CzProject\Runner\RunnerResult
+		 */
 		public function run($command, $subdirectory = NULL)
 		{
 			$cmd = is_string($command) ? $command : $this->processCommand($command);

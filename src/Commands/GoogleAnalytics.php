@@ -10,10 +10,9 @@
 	class GoogleAnalytics implements ICommand
 	{
 		/**
-		 * @param  Builder
-		 * @param  string
-		 * @param  string
-		 * @param  string|NULL
+		 * @param  string $file
+		 * @param  string $code
+		 * @param  string|NULL $placeholder
 		 */
 		public function run(Builder $builder, $file = NULL, $code = NULL, $placeholder = NULL)
 		{
@@ -45,9 +44,9 @@
 
 
 		/**
-		 * @param  string
-		 * @param  string|NULL
-		 * @return array
+		 * @param  string $file
+		 * @param  string|NULL $placeholder
+		 * @return array<string, string|NULL>
 		 */
 		private function prepareParameters($file, $placeholder)
 		{
