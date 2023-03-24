@@ -23,11 +23,11 @@ test(function () {
 	file_put_contents($inputPath, '');
 	file_put_contents($outputPath, ''); // lessc isnt run in real
 
-	$command->run($builder, 'www/components/styles.less');
+	$command->run($builder, ['file' => 'www/components/styles.less']);
 	$result = $builder->getRunnerResult();
 
 	$command->setExecutable('/bin/lessc');
-	$command->run($builder, 'www/components/styles.less');
+	$command->run($builder, ['file' => 'www/components/styles.less']);
 	$result = $builder->getRunnerResult();
 
 	Assert::same([
@@ -36,12 +36,12 @@ test(function () {
 	], $log);
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
+		$command->run($builder, []);
 
-	}, 'Deliverist\Builder\InvalidArgumentException', "Missing parameter 'file'.");
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'file'.");
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, 'not-found.less');
+		$command->run($builder, ['file' => 'not-found.less']);
 
 	}, 'Deliverist\Builder\FileSystemException', "File 'not-found.less' not found.");
 

@@ -5,34 +5,36 @@
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\CommandException;
 	use Deliverist\Builder\Command;
+	use Deliverist\Builder\Parameters;
 
 
 	class Rename implements Command
 	{
-		/**
-		 * @param  string|string[] $from
-		 * @param  string|NULL $to
-		 * @throws RenameException
-		 */
-		public function run(Builder $builder, $from = NULL, $to = NULL)
+		public function run(Builder $builder, array $params)
 		{
-			if (!isset($from)) {
-				throw new RenameException("Missing parameter 'from'.");
-			}
+			if (Parameters::has($params, 'files')) {
+				$this->process($builder, Parameters::stringMap($params, 'files'));
 
-			$paths = [];
-
-			if (is_array($from)) {
-				$paths = $from;
+			} elseif (Parameters::has($params, 'paths')) {
+				$this->process($builder, Parameters::stringMap($params, 'paths'));
 
 			} else {
-				if ($to === NULL) {
-					throw new RenameException("Missing parameter 'to'.");
-				}
-
-				$paths[$from] = $to;
+				$source = Parameters::string($params, 'from');
+				$destination = Parameters::string($params, 'to');
+				$this->process($builder, [
+					$source => $destination,
+				]);
 			}
+		}
 
+
+		/**
+		 * @param  array<string, string> $paths
+		 * @return void
+		 * @throws RenameException
+		 */
+		public function process(Builder $builder, array $paths)
+		{
 			foreach ($paths as $fromPath => $toPath) {
 				$builder->log("Renaming '$fromPath' to '$toPath'.");
 				$fromReal = $builder->getPath($fromPath);

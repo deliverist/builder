@@ -102,7 +102,7 @@ test(function () {
 		"/* STYLE 11 */",
 	])->write(TEMP_DIR . '/style11.css');
 
-	$command->run($builder, 'styles.css');
+	$command->run($builder, ['file' => 'styles.css']);
 
 	Assert::same(
 		FileContent::create([
@@ -127,12 +127,12 @@ test(function () {
 	);
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
+		$command->run($builder, []);
 
-	}, 'Deliverist\Builder\InvalidArgumentException', "Missing parameter 'files'.");
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'file'.");
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, 'not-found.txt');
+		$command->run($builder, ['file' => 'not-found.txt']);
 
 	}, 'Deliverist\Builder\FileSystemException', "File 'not-found.txt' not found.");
 

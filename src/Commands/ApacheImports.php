@@ -4,8 +4,8 @@
 
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\FileSystemException;
-	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\Command;
+	use Deliverist\Builder\Parameters;
 
 
 	class ApacheImports implements Command
@@ -14,21 +14,33 @@
 		private $toRemove;
 
 
-		/**
-		 * @param  string|string[] $files
-		 * @param  bool|NULL $removeFiles
-		 */
-		public function run(Builder $builder, $files = NULL, $removeFiles = TRUE)
+		public function run(Builder $builder, array $params)
 		{
-			if (!isset($files)) {
-				throw new InvalidArgumentException("Missing parameter 'files'.");
-			}
+			if (Parameters::has($params, 'files')) {
+				$this->processFiles(
+					$builder,
+					Parameters::stringList($params, 'files'),
+					Parameters::bool($params, 'removeFiles')
+				);
 
+			} else {
+				$this->processFiles(
+					$builder,
+					[Parameters::string($params, 'file')],
+					Parameters::bool($params, 'removeFiles', TRUE)
+				);
+			}
+		}
+
+
+		/**
+		 * @param  string[] $files
+		 * @param  bool|NULL $removeFiles
+		 * @return void
+		 */
+		public function processFiles(Builder $builder, array $files, $removeFiles = TRUE)
+		{
 			$this->toRemove = [];
-
-			if (!is_array($files)) {
-				$files = [$files];
-			}
 
 			foreach ($files as $file) {
 				$path = $builder->getPath($file);

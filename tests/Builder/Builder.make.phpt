@@ -11,9 +11,9 @@ class TestCommand implements Deliverist\Builder\Command
 	public $args;
 
 
-	public function run(Deliverist\Builder\Builder $builder, $argument1 = NULL, $argument2 = NULL)
+	public function run(Deliverist\Builder\Builder $builder, array $params)
 	{
-		$this->args = [$argument1, $argument2];
+		$this->args = $params;
 	}
 }
 
@@ -30,14 +30,14 @@ test(function () {
 	};
 
 	$builder->make('testCommand');
-	Assert::same([NULL, NULL], $testCommand->args);
+	Assert::same([], $testCommand->args);
 	Assert::same([
 		['testCommand', Builder::MAKE_START],
 		['testCommand', Builder::MAKE_END],
 	], $makeLog);
 
-	$builder->make('testCommand', NULL, 'TEST');
-	Assert::same([NULL, 'TEST'], $testCommand->args);
+	$builder->make('testCommand', ['arg1' => NULL, 'arg2' => 'TEST']);
+	Assert::same(['arg1' => NULL, 'arg2' => 'TEST'], $testCommand->args);
 
 });
 
@@ -46,9 +46,8 @@ test(function () { // closure
 
 	$makeLog = [];
 	$closureArgs = [];
-	$closure = function (Builder $builder, $arg = NULL) use (&$closureArgs) {
-		$closureArgs = func_get_args();
-		array_shift($closureArgs);
+	$closure = function (Builder $builder, array $params) use (&$closureArgs) {
+		$closureArgs = $params;
 	};
 	$builder = new Builder(TEMP_DIR, [
 		'closureCmd' => $closure,
@@ -66,8 +65,8 @@ test(function () { // closure
 	], $makeLog);
 
 
-	$builder->make('closureCmd', 'ARG1', 'ARG2');
-	Assert::same(['ARG1', 'ARG2'], $closureArgs);
+	$builder->make('closureCmd', ['a' => 'ARG1', 'b' => 'ARG2']);
+	Assert::same(['a' => 'ARG1', 'b' => 'ARG2'], $closureArgs);
 
 
 	$makeLog = [];
@@ -79,8 +78,8 @@ test(function () { // closure
 	], $makeLog);
 
 
-	$builder->make($closure, 'ARG1', 'ARG2');
-	Assert::same(['ARG1', 'ARG2'], $closureArgs);
+	$builder->make($closure, ['a' => 'ARG1', 'b' => 'ARG2']);
+	Assert::same(['a' => 'ARG1', 'b' => 'ARG2'], $closureArgs);
 
 });
 

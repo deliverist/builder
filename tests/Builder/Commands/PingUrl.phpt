@@ -29,7 +29,7 @@ test(function () {
 		</body>
 		</html>");
 
-	$command->run($builder, TEMP_DIR . '/index.html', FALSE);
+	$command->run($builder, ['url' => TEMP_DIR . '/index.html'], FALSE);
 
 	Assert::same([
 		['> Lorem ipsum', Builder::INFO],
@@ -39,8 +39,8 @@ test(function () {
 	], $log);
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
+		$command->run($builder, []);
 
-	}, 'Deliverist\Builder\InvalidArgumentException', "Missing parameter 'url'.");
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'url'.");
 
 });

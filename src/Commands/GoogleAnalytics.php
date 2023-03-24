@@ -5,26 +5,31 @@
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\Command;
+	use Deliverist\Builder\Parameters;
 
 
 	class GoogleAnalytics implements Command
 	{
+		public function run(Builder $builder, array $params)
+		{
+			$this->processFile(
+				$builder,
+				Parameters::string($params, 'file'),
+				Parameters::string($params, 'code'),
+				Parameters::stringOrNull($params, 'placeholder')
+			);
+		}
+
+
 		/**
 		 * @param  string $file
 		 * @param  string $code
 		 * @param  string|NULL $placeholder
+		 * @return void
 		 */
-		public function run(Builder $builder, $file = NULL, $code = NULL, $placeholder = NULL)
+		public function processFile(Builder $builder, $file, $code, $placeholder = NULL)
 		{
 			$builder->log("Inserting Google Analytics code '$code' into '$file'.");
-
-			if (!is_string($file)) {
-				throw new InvalidArgumentException('File must be string, ' . gettype($file) . ' given.');
-			}
-
-			if (!is_string($code)) {
-				throw new InvalidArgumentException('Code must be string, ' . gettype($code) . ' given.');
-			}
 
 			$parameters = $this->prepareParameters($file, $placeholder);
 			$script = [

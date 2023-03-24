@@ -22,7 +22,9 @@ test(function () {
 	file_put_contents(TEMP_DIR . '/import-a-a.txt', "IMPORT A-A\n");
 	file_put_contents(TEMP_DIR . '/import-b.txt', "IMPORT B\n");
 
-	$command->run($builder, 'imports.txt');
+	$command->run($builder, [
+		'file' => 'imports.txt'
+	]);
 
 	Assert::same("IMPORT A\nIMPORT A-A\n\nIMPORT B\n\n", file_get_contents(TEMP_DIR . '/imports.txt'));
 	Assert::false(is_file(TEMP_DIR . '/import-a.txt'));
@@ -30,12 +32,12 @@ test(function () {
 	Assert::false(is_file(TEMP_DIR . '/import-b.txt'));
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
+		$command->run($builder, []);
 
-	}, 'Deliverist\Builder\InvalidArgumentException', "Missing parameter 'files'.");
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'file'.");
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, 'not-found.txt');
+		$command->run($builder, ['file' => 'not-found.txt']);
 
 	}, 'Deliverist\Builder\FileSystemException', "File 'not-found.txt' not found.");
 

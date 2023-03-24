@@ -4,26 +4,36 @@
 
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\FileSystemException;
-	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\InvalidStateException;
 	use Deliverist\Builder\Command;
+	use Deliverist\Builder\Parameters;
 
 
 	class GoogleClosureCompiler implements Command
 	{
-		/**
-		 * @param  string|string[] $files
-		 */
-		public function run(Builder $builder, $files = NULL)
+		public function run(Builder $builder, array $params)
 		{
-			if (!isset($files)) {
-				throw new InvalidArgumentException("Missing parameter 'files'.");
-			}
+			if (Parameters::has($params, 'files')) {
+				$this->processFiles(
+					$builder,
+					Parameters::stringList($params, 'files')
+				);
 
-			if (!is_array($files)) {
-				$files = (array) $files;
+			} else {
+				$this->processFiles(
+					$builder,
+					[Parameters::string($params, 'file')]
+				);
 			}
+		}
 
+
+		/**
+		 * @param  string[] $files
+		 * @return void
+		 */
+		public function processFiles(Builder $builder, array $files)
+		{
 			foreach ($files as $file) {
 				$path = $builder->getPath($file);
 

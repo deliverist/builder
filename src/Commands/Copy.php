@@ -3,36 +3,37 @@
 	namespace Deliverist\Builder\Commands;
 
 	use Deliverist\Builder\Builder;
-	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\Command;
+	use Deliverist\Builder\Parameters;
 	use Nette\Utils\FileSystem;
 
 
 	class Copy implements Command
 	{
-		/**
-		 * @param  string|string[] $source
-		 * @param  string|NULL $destination
-		 */
-		public function run(Builder $builder, $source = NULL, $destination = NULL)
+		public function run(Builder $builder, array $params)
 		{
-			if (!isset($source)) {
-				throw new InvalidArgumentException("Missing parameter 'source'.");
-			}
+			if (Parameters::has($params, 'files')) {
+				$this->process($builder, Parameters::stringMap($params, 'files'));
 
-			$paths = [];
-
-			if (is_array($source)) {
-				$paths = $source;
+			} elseif (Parameters::has($params, 'paths')) {
+				$this->process($builder, Parameters::stringMap($params, 'paths'));
 
 			} else {
-				if ($destination === NULL) {
-					throw new InvalidArgumentException("Missing parameter 'destination'.");
-				}
-
-				$paths[$source] = $destination;
+				$source = Parameters::string($params, 'from');
+				$destination = Parameters::string($params, 'to');
+				$this->process($builder, [
+					$source => $destination,
+				]);
 			}
+		}
 
+
+		/**
+		 * @param  string[] $paths
+		 * @return void
+		 */
+		public function process(Builder $builder, array $paths)
+		{
 			foreach ($paths as $sourcePath => $destinationPath) {
 				$builder->log("Copying '$sourcePath' destination '$destinationPath'.");
 				FileSystem::copy($builder->getPath($sourcePath), $builder->getPath($destinationPath), FALSE);

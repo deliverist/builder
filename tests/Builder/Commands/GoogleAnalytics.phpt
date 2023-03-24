@@ -21,9 +21,19 @@ test(function () {
 	file_put_contents(TEMP_DIR . '/template.latte', "\n{* GA *}\n");
 	file_put_contents(TEMP_DIR . '/template.html', "\n<!-- GA -->\n");
 
-	$command->run($builder, 'template.php', 'TEST-PHP', '%% GA %%');
-	$command->run($builder, 'template.latte', 'TEST-LATTE');
-	$command->run($builder, 'template.html', 'TEST-HTML');
+	$command->run($builder, [
+		'file' => 'template.php',
+		'code' => 'TEST-PHP',
+		'placeholder' => '%% GA %%',
+	]);
+	$command->run($builder, [
+		'file' => 'template.latte',
+		'code' => 'TEST-LATTE',
+	]);
+	$command->run($builder, [
+		'file' => 'template.html',
+		'code' => 'TEST-HTML',
+	]);
 
 	Assert::same(implode('', [
 		"\n",
@@ -71,18 +81,18 @@ test(function () {
 	$command = new Commands\GoogleAnalytics;
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
-	}, 'Deliverist\Builder\InvalidArgumentException', 'File must be string, NULL given.');
+		$command->run($builder, []);
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'file'.");
 
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, 'file.txt');
-	}, 'Deliverist\Builder\InvalidArgumentException', 'Code must be string, NULL given.');
+		$command->run($builder, ['file' => 'file.txt']);
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'code'.");
 
 
 	Assert::exception(function () use ($command, $builder) {
 		file_put_contents(TEMP_DIR . '/file.txt', '[GA]');
-		$command->run($builder, 'file.txt', 'TEST-TXT');
+		$command->run($builder, ['file' => 'file.txt', 'code' => 'TEST-TXT']);
 	}, 'Deliverist\Builder\InvalidArgumentException', "Missing placeholder, unknow file extension 'txt'.");
 
 });

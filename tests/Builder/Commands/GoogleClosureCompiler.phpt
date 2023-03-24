@@ -18,19 +18,21 @@ test(function () {
 	$command = new Commands\GoogleClosureCompiler;
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
+		$command->run($builder, []);
 
-	}, 'Deliverist\Builder\InvalidArgumentException', "Missing parameter 'files'.");
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'file'.");
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, 'not-found.js');
+		$command->run($builder, ['file' => 'not-found.js']);
 
 	}, 'Deliverist\Builder\FileSystemException', "File 'not-found.js' not found.");
 
 	Assert::exception(function () use ($command, $builder) {
 		$command->run($builder, [
-			'not-found-1.js',
-			'not-found-2.js',
+			'files' => [
+				'not-found-1.js',
+				'not-found-2.js',
+			]
 		]);
 
 	}, 'Deliverist\Builder\FileSystemException', "File 'not-found-1.js' not found.");

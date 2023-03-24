@@ -22,10 +22,12 @@ test(function () {
 	Assert::true(file_exists(TEMP_DIR . '/index.php'));
 	Assert::true(file_exists(TEMP_DIR . '/config.php'));
 
-	$command->run($builder, 'index.php');
+	$command->run($builder, ['path' => 'index.php']);
 	$command->run($builder, [
-		'config.php',
-		'missing.txt',
+		'paths' => [
+			'config.php',
+			'missing.txt',
+		],
 	]);
 	Assert::false(file_exists(TEMP_DIR . '/index.php'));
 	Assert::false(file_exists(TEMP_DIR . '/config.php'));

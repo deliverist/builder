@@ -3,24 +3,35 @@
 	namespace Deliverist\Builder\Commands;
 
 	use Deliverist\Builder\Builder;
-	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\InvalidStateException;
 	use Deliverist\Builder\Command;
-	use Nette\Utils\FileSystem;
+	use Deliverist\Builder\Parameters;
 
 
 	class PingUrl implements Command
 	{
+		public function run(Builder $builder, array $params)
+		{
+			$validateSsl = Parameters::bool($params, 'validateSsl', TRUE);
+
+			if (Parameters::has($params, 'urls')) {
+				foreach (Parameters::stringList($params, 'urls') as $url) {
+					$this->processUrl($builder, $url, $validateSsl);
+				}
+
+			} else {
+				$this->processUrl($builder, Parameters::string($params, 'url'), $validateSsl);
+			}
+		}
+
+
 		/**
 		 * @param  string $url
 		 * @param  bool $validateSsl
+		 * @return void
 		 */
-		public function run(Builder $builder, $url = NULL, $validateSsl = TRUE)
+		public function processUrl(Builder $builder, $url, $validateSsl = TRUE)
 		{
-			if (!isset($url)) {
-				throw new InvalidArgumentException("Missing parameter 'url'.");
-			}
-
 			$options = [
 				'ssl' => [
 					'verify_peer' => $validateSsl,

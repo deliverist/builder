@@ -28,6 +28,21 @@
 	}
 
 
+	class InvalidParameterNameException extends Exception
+	{
+	}
+
+
+	class InvalidParameterTypeException extends Exception
+	{
+	}
+
+
 	class InvalidStateException extends Exception
+	{
+	}
+
+
+	class MissingParameterException extends Exception
 	{
 	}

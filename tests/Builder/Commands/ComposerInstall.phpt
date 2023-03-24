@@ -17,10 +17,10 @@ test(function () {
 	};
 	$command = new Commands\ComposerInstall;
 
-	$command->run($builder);
+	$command->run($builder, []);
 
 	$command->setExecutable('/bin/composer');
-	$command->run($builder, 'app/composer.json');
+	$command->run($builder, ['composerFile' => 'app/composer.json']);
 
 	Assert::same([
 		['Running `composer install`', Builder::INFO],

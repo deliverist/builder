@@ -7,6 +7,7 @@
 	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\InvalidStateException;
 	use Deliverist\Builder\Command;
+	use Deliverist\Builder\Parameters;
 	use Nette\Utils\FileSystem;
 
 
@@ -27,15 +28,25 @@
 		}
 
 
+		public function run(Builder $builder, array $params)
+		{
+			if (Parameters::has($params, 'files')) {
+				foreach (Parameters::stringList($params, 'files') as $file) {
+					$this->processFile($builder, $file);
+				}
+
+			} else {
+				$this->processFile($builder, Parameters::string($params, 'file'));
+			}
+		}
+
+
 		/**
 		 * @param  string $file
+		 * @return void
 		 */
-		public function run(Builder $builder, $file = NULL)
+		public function processFile(Builder $builder, $file)
 		{
-			if (!isset($file)) {
-				throw new InvalidArgumentException("Missing parameter 'file'.");
-			}
-
 			$path = $builder->getPath($file);
 
 			if (!is_file($path)) {

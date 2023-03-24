@@ -20,19 +20,22 @@ test(function () {
 	$path = TEMP_DIR . '/test.txt';
 	file_put_contents($path, "RewriteEngine on\n#production: RewriteRule XYZ\n");
 
-	$command->run($builder, 'test.txt', [
-		'#production: ' => '',
+	$command->run($builder, [
+		'file' => 'test.txt',
+		'replacements' => [
+			'#production: ' => '',
+		]
 	]);
 
 	Assert::same("RewriteEngine on\nRewriteRule XYZ\n", file_get_contents($path));
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
+		$command->run($builder, ['replacements' => []]);
 
-	}, 'Deliverist\Builder\InvalidArgumentException', "Missing parameter 'file'.");
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'file'.");
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, 'not-found.txt');
+		$command->run($builder, ['file' => 'not-found.txt', 'replacements' => []]);
 
 	}, 'Deliverist\Builder\FileSystemException', "File 'not-found.txt' not found.");
 

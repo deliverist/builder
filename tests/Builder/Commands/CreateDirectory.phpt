@@ -21,10 +21,12 @@ test(function () {
 	Assert::false(is_dir(TEMP_DIR . '/new-directory-2'));
 	Assert::false(is_dir(TEMP_DIR . '/new-directory-3'));
 
-	$command->run($builder, 'new-directory');
+	$command->run($builder, ['directory' => 'new-directory']);
 	$command->run($builder, [
-		'new-directory-2',
-		'new-directory-3',
+		'directories' => [
+			'new-directory-2',
+			'new-directory-3',
+		]
 	]);
 
 	Assert::true(is_dir(TEMP_DIR . '/new-directory'));
@@ -38,7 +40,7 @@ test(function () {
 	], $log);
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
-	}, 'Deliverist\Builder\InvalidArgumentException', "Missing parameter 'directories'.");
+		$command->run($builder, []);
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'directory'.");
 
 });

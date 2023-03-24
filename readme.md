@@ -36,10 +36,8 @@ $builder->onLog[] = function ($message, $type) {
 };
 
 $builder->make('composer-install')
-	->make('rename', 'index.php', 'www/index.php')
-	->make('remove', array(
-		'composer.lock',
-	))
+	->make('rename', ['from' => 'index.php', 'to' => 'www/index.php'])
+	->make('remove', ['file' => 'composer.lock'])
 	->make('composer-install');
 
 ```
@@ -52,11 +50,11 @@ $builder->make('composer-install')
 Expands clause `<!--#include file="file.txt" -->` in specified files.
 
 ``` php
-$builder->make('apache-imports', 'file-to-expand.txt');
-$builder->make('apache-imports', array(
+$builder->make('apache-imports', ['file' => 'file-to-expand.txt']);
+$builder->make('apache-imports', ['files' => [
 	'admin.js',
 	'front.js',
-));
+]]);
 ```
 
 
@@ -66,7 +64,7 @@ Runs `composer install` in `composer.json` directory.
 
 ``` php
 $builder->make('composer-install');
-$builder->make('composer-install', 'path/to/composer.json');
+$builder->make('composer-install', ['composerFile' => 'path/to/composer.json']);
 ```
 
 
@@ -75,10 +73,13 @@ $builder->make('composer-install', 'path/to/composer.json');
 Copies specified files.
 
 ``` php
-$builder->make('copy', 'old.txt', 'new.txt');
-$builder->make('copy', array(
+$builder->make('copy', ['from' => 'old.txt', 'to' => 'new.txt']);
+$builder->make('copy', ['files' => [
 	'old.txt' => 'new.txt',
-));
+]]);
+$builder->make('copy', ['paths' => [
+	'old/dir' => 'new/dir',
+]]);
 ```
 
 
@@ -87,11 +88,11 @@ $builder->make('copy', array(
 Creates specified directories.
 
 ``` php
-$builder->make('create-directory', 'new-directory');
-$builder->make('create-directory', array(
+$builder->make('create-directory', ['directory' => 'new-directory']);
+$builder->make('create-directory', ['directories' => [
 	'new-directory',
 	'new-directory-2',
-));
+]]);
 ```
 
 
@@ -100,11 +101,11 @@ $builder->make('create-directory', array(
 Expands clause `@import 'file.css'` in specified files.
 
 ``` php
-$builder->make('css-expand-imports', 'file-to-expand.txt');
-$builder->make('css-expand-imports', array(
+$builder->make('css-expand-imports', ['file' => 'file-to-expand.txt']);
+$builder->make('css-expand-imports', ['files' => [
 	'admin.css',
 	'front.css',
-));
+]]);
 ```
 
 
@@ -113,9 +114,13 @@ $builder->make('css-expand-imports', array(
 Replaces placeholder with Google Analytics script in file.
 
 ``` php
-$builder->make('google-analytics', 'path/to/file.php', 'UA-9876-5', '%% GA %%'); // replaces placeholder '%% GA %%' in file
-$builder->make('google-analytics', 'path/to/file.html', 'UA-9876-5'); // uses placeholder '<!-- GA -->' in file
-$builder->make('google-analytics', 'path/to/file.latte', 'UA-9876-5'); // uses placeholder {* GA *} in file
+$builder->make('google-analytics', [
+	'file' => 'path/to/file.php',
+	'code' => 'UA-9876-5',
+	'placeholder' => '%% GA %%',
+]); // replaces placeholder '%% GA %%' in file
+$builder->make('google-analytics', ['file' => 'path/to/file.html', 'code' => 'UA-9876-5']); // uses placeholder '<!-- GA -->' in file
+$builder->make('google-analytics', ['file' => 'path/to/file.latte', 'code' => 'UA-9876-5']); // uses placeholder {* GA *} in file
 ```
 
 
@@ -124,11 +129,11 @@ $builder->make('google-analytics', 'path/to/file.latte', 'UA-9876-5'); // uses p
 Minifies files in online Google Closure Compiler.
 
 ``` php
-$builder->make('google-closure-compiler', 'script.js');
-$builder->make('google-closure-compiler', array(
+$builder->make('google-closure-compiler', ['file' => 'script.js']);
+$builder->make('google-closure-compiler', ['files' => [
 	'script-1.js',
 	'script-2.js',
-));
+]]);
 ```
 
 
@@ -137,11 +142,11 @@ $builder->make('google-closure-compiler', array(
 Runs `lessc` for compiling of LESS files.
 
 ``` php
-$builder->make('less-compile', 'styles.less');
-$builder->make('less-compile', array(
+$builder->make('less-compile', ['file' => 'styles.less']);
+$builder->make('less-compile', ['files' => [
 	'style-1.less',
 	'style-2.less',
-));
+]]);
 ```
 
 
@@ -150,11 +155,11 @@ $builder->make('less-compile', array(
 Removes empty lines & whitespaces on start & end of lines.
 
 ``` php
-$builder->make('minify-content', 'file.txt');
-$builder->make('minify-content', array(
+$builder->make('minify-content', ['file' => 'file.txt']);
+$builder->make('minify-content', ['files' => [
 	'file-1.txt',
 	'file-2.txt',
-));
+]]);
 ```
 
 **Example:**
@@ -188,8 +193,8 @@ Lorem ipsum dolor sit amet.
 Opens URL and shows content.
 
 ``` php
-$builder->make('ping-url', 'https://example.com/migrations.php');
-$builder->make('ping-url', 'https://example.com/migrations.php', FALSE); // disable SSL validation
+$builder->make('ping-url', ['url' => 'https://example.com/migrations.php']);
+$builder->make('ping-url', ['url' => 'https://example.com/migrations.php', 'validateSsl' => FALSE]); // disable SSL validation
 ```
 
 
@@ -198,12 +203,16 @@ $builder->make('ping-url', 'https://example.com/migrations.php', FALSE); // disa
 Removes file or directory.
 
 ``` php
-$builder->make('remove', 'path/to/file.txt');
-$builder->make('remove', 'path/to/directory');
-$builder->make('remove', array(
+$builder->make('remove', ['file' => 'path/to/file.txt']);
+$builder->make('remove', ['path' => 'path/to/directory']);
+$builder->make('remove', ['files' => [
 	'path/to/file.txt',
 	'path/to/directory',
-));
+]]);
+$builder->make('remove', ['paths' => [
+	'path/to/file.txt',
+	'path/to/directory',
+]]);
 ```
 
 
@@ -212,10 +221,10 @@ $builder->make('remove', array(
 Renames file or directory.
 
 ``` php
-$builder->make('rename', 'old.txt', 'new.txt');
-$builder->make('rename', array(
+$builder->make('rename', ['from' => 'old.txt', 'to' => 'new.txt']);
+$builder->make('rename', ['files' => [
 	'old.txt' => 'new.txt',
-));
+]]);
 ```
 
 
@@ -224,10 +233,13 @@ $builder->make('rename', array(
 Replaces content in file.
 
 ``` php
-$builder->make('rename', 'file.txt', array(
-	'from' => 'to',
-	'old string' => 'new string',
-));
+$builder->make('replace-content', [
+	'file' => 'file.txt',
+	'replacements' => [
+		'from' => 'to',
+		'old string' => 'new string',
+	],
+]);
 ```
 
 ------------------------------

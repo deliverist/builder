@@ -5,6 +5,7 @@
 	use Deliverist\Builder\Builder;
 	use Deliverist\Builder\InvalidStateException;
 	use Deliverist\Builder\Command;
+	use Deliverist\Builder\Parameters;
 
 
 	class ComposerInstall implements Command
@@ -24,10 +25,20 @@
 		}
 
 
+		public function run(Builder $builder, array $params)
+		{
+			$this->processInstall(
+				$builder,
+				Parameters::string($params, 'composerFile', 'composer.json')
+			);
+		}
+
+
 		/**
 		 * @param  string $file
+		 * @return void
 		 */
-		public function run(Builder $builder, $file = 'composer.json')
+		public function processInstall(Builder $builder, $file = 'composer.json')
 		{
 			$builder->log('Running `composer install`');
 

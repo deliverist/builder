@@ -30,7 +30,7 @@ test(function () {
 			</p>
 		{/block}\n\n");
 
-	$command->run($builder, 'test.txt');
+	$command->run($builder, ['file' => 'test.txt']);
 
 	Assert::same(implode("\n", [
 		'{block content}',
@@ -46,12 +46,12 @@ test(function () {
 	]), file_get_contents($path));
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
+		$command->run($builder, []);
 
-	}, 'Deliverist\Builder\InvalidArgumentException', "Missing parameter 'files'.");
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'file'.");
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, 'not-found.txt');
+		$command->run($builder, ['file' => 'not-found.txt']);
 
 	}, 'Deliverist\Builder\FileSystemException', "File 'not-found.txt' not found.");
 

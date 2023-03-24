@@ -21,10 +21,12 @@ test(function () {
 	file_put_contents(TEMP_DIR . '/source-2.txt', '');
 	file_put_contents(TEMP_DIR . '/source-3.txt', '');
 
-	$command->run($builder, 'source-1.txt', 'destination-1.txt');
+	$command->run($builder, ['from' => 'source-1.txt', 'to' => 'destination-1.txt']);
 	$command->run($builder, [
-		'source-2.txt' => 'destination-2.txt',
-		'source-3.txt' => 'destination-3.txt'
+		'files' => [
+			'source-2.txt' => 'destination-2.txt',
+			'source-3.txt' => 'destination-3.txt'
+		]
 	]);
 
 	Assert::true(is_file(TEMP_DIR . '/destination-1.txt'));
@@ -32,13 +34,13 @@ test(function () {
 	Assert::true(is_file(TEMP_DIR . '/destination-3.txt'));
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
+		$command->run($builder, []);
 
-	}, 'Deliverist\Builder\InvalidArgumentException', "Missing parameter 'source'.");
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'from'.");
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, 'source.txt');
+		$command->run($builder, ['from' => 'source.txt']);
 
-	}, 'Deliverist\Builder\InvalidArgumentException', "Missing parameter 'destination'.");
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'to'.");
 
 });

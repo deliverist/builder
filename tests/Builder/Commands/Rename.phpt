@@ -17,7 +17,7 @@ test(function () {
 	Assert::true(file_exists(TEMP_DIR . '/index.php'));
 	Assert::false(file_exists(TEMP_DIR . '/www/index.php'));
 
-	$command->run($builder, 'index.php', 'www/index.php');
+	$command->run($builder, ['from' => 'index.php', 'to' => 'www/index.php']);
 	Assert::false(file_exists(TEMP_DIR . '/index.php'));
 	Assert::true(file_exists(TEMP_DIR . '/www/index.php'));
 
@@ -38,8 +38,10 @@ test(function () {
 	Assert::false(file_exists(TEMP_DIR . '/app/config.php'));
 
 	$command->run($builder, [
-		'index.php' => 'www/index.php',
-		'config.php' => 'app/config.php',
+		'files' => [
+			'index.php' => 'www/index.php',
+			'config.php' => 'app/config.php',
+		]
 	]);
 	Assert::false(file_exists(TEMP_DIR . '/index.php'));
 	Assert::false(file_exists(TEMP_DIR . '/config.php'));
@@ -56,17 +58,17 @@ test(function () {
 	$command = new Commands\Rename;
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder);
-	}, 'Deliverist\Builder\Commands\RenameException', "Missing parameter 'from'.");
+		$command->run($builder, []);
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'from'.");
 
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, 'file.txt');
-	}, 'Deliverist\Builder\Commands\RenameException', "Missing parameter 'to'.");
+		$command->run($builder, ['from' => 'file.txt']);
+	}, Deliverist\Builder\MissingParameterException::class, "Missing parameter 'to'.");
 
 
 	Assert::exception(function () use ($command, $builder) {
-		$command->run($builder, 'missing.txt', 'renamed.txt');
+		$command->run($builder, ['from' => 'missing.txt', 'to' => 'renamed.txt']);
 	}, 'Deliverist\Builder\Commands\RenameException', "Renaming of 'missing.txt' to 'renamed.txt' failed.");
 
 });

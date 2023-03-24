@@ -59,13 +59,12 @@
 
 		/**
 		 * @param  string|Command|callable $command
-		 * @param  mixed ...$args
+		 * @param  mixed ...$params
 		 * @return self
 		 * @throws BuilderException
 		 */
-		public function make($command, ...$args)
+		public function make($command, ...$params)
 		{
-			$cmd = $command;
 			$commandName = 'callback';
 
 			if (is_string($command)) {
@@ -74,18 +73,18 @@
 				}
 
 				$commandName = $command;
-				$cmd = $this->commands[$command];
+				$command = $this->commands[$command];
 			}
 
-			array_unshift($args, $this);
+			$params = $this->filterParameters($params);
 
 			$this->fireEvent($this->onMake, [$commandName, self::MAKE_START]);
 
-			if ($cmd instanceof Command) {
-				Callback::invokeArgs([$cmd, 'run'], $args);
+			if ($command instanceof Command) {
+				$command->run($this, $params);
 
 			} else {
-				Callback::invokeArgs($cmd, $args);
+				call_user_func($command, $this, $params);
 			}
 
 			$this->fireEvent($this->onMake, [$commandName, self::MAKE_END]);
@@ -212,5 +211,29 @@
 			foreach ($handlers as $handler) {
 				Callback::invokeArgs($handler, $args);
 			}
+		}
+
+
+		/**
+		 * @param  array<mixed> $params
+		 * @return array<string, mixed>
+		 */
+		private function filterParameters(array $params)
+		{
+			if (count($params) === 1 && isset($params[0]) && is_array($params[0])) {
+				$params = $params[0];
+			}
+
+			$res = [];
+
+			foreach ($params as $paramName => $param) {
+				if (!is_string($paramName)) {
+					throw new InvalidArgumentException("Parameter name must be string, $paramName given.");
+				}
+
+				$res[$paramName] = $param;
+			}
+
+			return $params;
 		}
 	}

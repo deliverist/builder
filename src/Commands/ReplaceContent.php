@@ -6,16 +6,33 @@
 	use Deliverist\Builder\InvalidArgumentException;
 	use Deliverist\Builder\FileSystemException;
 	use Deliverist\Builder\Command;
+	use Deliverist\Builder\Parameters;
 	use Nette\Utils\FileSystem;
 
 
 	class ReplaceContent implements Command
 	{
+		public function run(Builder $builder, array $params)
+		{
+			$replacements = Parameters::stringMap($params, 'replacements');
+
+			if (Parameters::has($params, 'files')) {
+				foreach (Parameters::stringList($params, 'files') as $file) {
+					$this->processFile($builder, $file, $replacements);
+				}
+
+			} else {
+				$this->processFile($builder, Parameters::string($params, 'file'), $replacements);
+			}
+		}
+
+
 		/**
 		 * @param  string $file
 		 * @param  array<string, string> $replacements
+		 * @return void
 		 */
-		public function run(Builder $builder, $file = NULL, array $replacements = [])
+		public function processFile(Builder $builder, $file = NULL, array $replacements = [])
 		{
 			if (!isset($file)) {
 				throw new InvalidArgumentException("Missing parameter 'file'.");
