@@ -43,3 +43,61 @@
 			return $result;
 		}
 	}
+
+
+	class TestLogger implements \Deliverist\Builder\Logger
+	{
+		/** @var string[] */
+		private $log = [];
+
+
+		/**
+		 * @return string[]
+		 */
+		public function getLog()
+		{
+			return $this->log;
+		}
+
+
+		public function logCommandStart($commandName, array $parameters)
+		{
+			$this->log[] = '[START] ' . $commandName;
+		}
+
+
+		public function logCommandEnd($commandName, $elapsedTime)
+		{
+			$this->log[] = '[END] ' . $commandName;
+		}
+
+
+		public function logDebug($msg)
+		{
+			$this->log[] = '[DEBUG] ' . $msg;
+		}
+
+
+		public function logInfo($msg)
+		{
+			$this->log[] = '[INFO] ' . $msg;
+		}
+
+
+		public function logWarning($msg)
+		{
+			$this->log[] = '[WARNING] ' . $msg;
+		}
+
+
+		public function logError($msg)
+		{
+			$this->log[] = '[ERROR] ' . $msg;
+		}
+
+
+		public function logSuccess($msg)
+		{
+			$this->log[] = '[SUCCESS] ' . $msg;
+		}
+	}

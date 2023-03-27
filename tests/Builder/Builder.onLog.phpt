@@ -8,11 +8,8 @@ require __DIR__ . '/../bootstrap.php';
 
 test(function () {
 
-	$output = [];
-	$builder = new Builder(__DIR__);
-	$builder->onLog[] = function ($message, $type) use (&$output) {
-		$output[] = "$type: $message";
-	};
+	$logger = new TestLogger;
+	$builder = new Builder(__DIR__, [], $logger);
 
 	$builder->log("Lorem\nIpsum\n");
 	$builder->logDebug('DEBUG');
@@ -21,11 +18,11 @@ test(function () {
 	$builder->logSuccess('SUCCESS');
 
 	Assert::same([
-		Builder::INFO . ": Lorem\nIpsum\n",
-		Builder::DEBUG . ': DEBUG',
-		Builder::WARNING . ': WARNING',
-		Builder::ERROR . ': ERROR',
-		Builder::SUCCESS . ': SUCCESS',
-	], $output);
+		"[INFO] Lorem\nIpsum\n",
+		'[DEBUG] DEBUG',
+		'[WARNING] WARNING',
+		'[ERROR] ERROR',
+		'[SUCCESS] SUCCESS',
+	], $logger->getLog());
 
 });

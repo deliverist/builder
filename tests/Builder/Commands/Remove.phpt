@@ -10,11 +10,8 @@ require __DIR__ . '/../../bootstrap.php';
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$log = [];
-	$builder = new Builder(TEMP_DIR);
-	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = [$message, $type];
-	};
+	$logger = new TestLogger;
+	$builder = new Builder(TEMP_DIR, [], $logger);
 	$command = new Commands\Remove;
 
 	file_put_contents(TEMP_DIR . '/index.php', '');
@@ -33,9 +30,9 @@ test(function () {
 	Assert::false(file_exists(TEMP_DIR . '/config.php'));
 
 	Assert::same([
-		["Removing path 'index.php'.", Builder::INFO],
-		["Removing path 'config.php'.", Builder::INFO],
-		["Path 'missing.txt' not found.", Builder::WARNING],
-	], $log);
+		"[INFO] Removing path 'index.php'.",
+		"[INFO] Removing path 'config.php'.",
+		"[WARNING] Path 'missing.txt' not found.",
+	], $logger->getLog());
 
 });

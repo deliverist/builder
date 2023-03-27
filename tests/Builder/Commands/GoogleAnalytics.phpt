@@ -10,11 +10,8 @@ require __DIR__ . '/../../bootstrap.php';
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$log = [];
-	$builder = new Builder(TEMP_DIR);
-	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = [$message, $type];
-	};
+	$logger = new TestLogger;
+	$builder = new Builder(TEMP_DIR, [], $logger);
 	$command = new Commands\GoogleAnalytics;
 
 	file_put_contents(TEMP_DIR . '/template.php', "\n%% GA %%\n");
@@ -66,10 +63,10 @@ test(function () {
 	]), file_get_contents(TEMP_DIR . '/template.html'));
 
 	Assert::same([
-		["Inserting Google Analytics code 'TEST-PHP' into 'template.php'.", Builder::INFO],
-		["Inserting Google Analytics code 'TEST-LATTE' into 'template.latte'.", Builder::INFO],
-		["Inserting Google Analytics code 'TEST-HTML' into 'template.html'.", Builder::INFO],
-	], $log);
+		"[INFO] Inserting Google Analytics code 'TEST-PHP' into 'template.php'.",
+		"[INFO] Inserting Google Analytics code 'TEST-LATTE' into 'template.latte'.",
+		"[INFO] Inserting Google Analytics code 'TEST-HTML' into 'template.html'.",
+	], $logger->getLog());
 
 });
 
@@ -77,7 +74,7 @@ test(function () {
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$builder = new Builder(TEMP_DIR);
+	$builder = new Builder(TEMP_DIR, [], new TestLogger);
 	$command = new Commands\GoogleAnalytics;
 
 	Assert::exception(function () use ($command, $builder) {

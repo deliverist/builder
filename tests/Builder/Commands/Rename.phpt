@@ -10,7 +10,7 @@ require __DIR__ . '/../../bootstrap.php';
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$builder = new Builder(TEMP_DIR);
+	$builder = new Builder(TEMP_DIR, [], new TestLogger);
 	$command = new Commands\Rename;
 
 	file_put_contents(TEMP_DIR . '/index.php', '');
@@ -27,7 +27,7 @@ test(function () {
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$builder = new Builder(TEMP_DIR);
+	$builder = new Builder(TEMP_DIR, [], new TestLogger);
 	$command = new Commands\Rename;
 
 	file_put_contents(TEMP_DIR . '/index.php', '');
@@ -54,7 +54,7 @@ test(function () {
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$builder = new Builder(TEMP_DIR);
+	$builder = new Builder(TEMP_DIR, [], new TestLogger);
 	$command = new Commands\Rename;
 
 	Assert::exception(function () use ($command, $builder) {

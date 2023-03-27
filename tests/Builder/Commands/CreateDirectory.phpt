@@ -10,11 +10,8 @@ require __DIR__ . '/../../bootstrap.php';
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$log = [];
-	$builder = new Builder(TEMP_DIR);
-	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = [$message, $type];
-	};
+	$logger = new TestLogger;
+	$builder = new Builder(TEMP_DIR, [], $logger);
 	$command = new Commands\CreateDirectory;
 
 	Assert::false(is_dir(TEMP_DIR . '/new-directory'));
@@ -34,10 +31,10 @@ test(function () {
 	Assert::true(is_dir(TEMP_DIR . '/new-directory-3'));
 
 	Assert::same([
-		["Create directory 'new-directory'.", Builder::INFO],
-		["Create directory 'new-directory-2'.", Builder::INFO],
-		["Create directory 'new-directory-3'.", Builder::INFO],
-	], $log);
+		"[INFO] Create directory 'new-directory'.",
+		"[INFO] Create directory 'new-directory-2'.",
+		"[INFO] Create directory 'new-directory-3'.",
+	], $logger->getLog());
 
 	Assert::exception(function () use ($command, $builder) {
 		$command->run($builder, []);

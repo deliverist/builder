@@ -8,7 +8,7 @@ require __DIR__ . '/../bootstrap.php';
 
 test(function () {
 
-	$builder = new Builder(TEMP_DIR);
+	$builder = new Builder(TEMP_DIR, [], new TestLogger);
 
 	Assert::exception(function () use ($builder) {
 		$builder->readFile('docs/readme.txt');

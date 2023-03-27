@@ -41,11 +41,7 @@ class FileContent
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$log = [];
-	$builder = new Builder(TEMP_DIR);
-	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = [$message, $type];
-	};
+	$builder = new Builder(TEMP_DIR, [], new TestLogger);
 	$command = new Commands\CssExpandImports;
 
 	FileContent::create([

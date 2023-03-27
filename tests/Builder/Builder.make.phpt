@@ -21,20 +21,17 @@ class TestCommand implements Deliverist\Builder\Command
 test(function () {
 
 	$testCommand = new TestCommand;
-	$makeLog = [];
+	$logger = new TestLogger;
 	$builder = new Builder(TEMP_DIR, [
 		'testCommand' => $testCommand,
-	]);
-	$builder->onMake[] = function ($commandName, $type) use (&$makeLog) {
-		$makeLog[] = [$commandName, $type];
-	};
+	], $logger);
 
 	$builder->make('testCommand');
 	Assert::same([], $testCommand->args);
 	Assert::same([
-		['testCommand', Builder::MAKE_START],
-		['testCommand', Builder::MAKE_END],
-	], $makeLog);
+		'[START] testCommand',
+		'[END] testCommand',
+	], $logger->getLog());
 
 	$builder->make('testCommand', ['arg1' => NULL, 'arg2' => 'TEST']);
 	Assert::same(['arg1' => NULL, 'arg2' => 'TEST'], $testCommand->args);
@@ -44,49 +41,44 @@ test(function () {
 
 test(function () { // closure
 
-	$makeLog = [];
+	$logger = new TestLogger;
 	$closureArgs = [];
 	$closure = function (Builder $builder, array $params) use (&$closureArgs) {
 		$closureArgs = $params;
 	};
 	$builder = new Builder(TEMP_DIR, [
 		'closureCmd' => $closure,
-	]);
-	$builder->onMake[] = function ($commandName, $type) use (&$makeLog) {
-		$makeLog[] = [$commandName, $type];
-	};
-
+	], $logger);
 
 	$builder->make('closureCmd');
 	Assert::same([], $closureArgs);
-	Assert::same([
-		['closureCmd', Builder::MAKE_START],
-		['closureCmd', Builder::MAKE_END],
-	], $makeLog);
-
 
 	$builder->make('closureCmd', ['a' => 'ARG1', 'b' => 'ARG2']);
 	Assert::same(['a' => 'ARG1', 'b' => 'ARG2'], $closureArgs);
 
 
-	$makeLog = [];
 	$builder->make($closure);
 	Assert::same([], $closureArgs);
-	Assert::same([
-		['callback', Builder::MAKE_START],
-		['callback', Builder::MAKE_END],
-	], $makeLog);
-
 
 	$builder->make($closure, ['a' => 'ARG1', 'b' => 'ARG2']);
 	Assert::same(['a' => 'ARG1', 'b' => 'ARG2'], $closureArgs);
 
+	Assert::same([
+		'[START] closureCmd',
+		'[END] closureCmd',
+		'[START] closureCmd',
+		'[END] closureCmd',
+		'[START] @anonymous',
+		'[END] @anonymous',
+		'[START] @anonymous',
+		'[END] @anonymous',
+	], $logger->getLog());
 });
 
 
 test(function () {
 
-	$builder = new Builder(TEMP_DIR);
+	$builder = new Builder(TEMP_DIR, [], new TestLogger);
 
 	Assert::exception(function () use ($builder) {
 		$builder->make('testCommand');

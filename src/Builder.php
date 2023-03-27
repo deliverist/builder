@@ -10,26 +10,14 @@
 
 	class Builder
 	{
-		const DEBUG = 0;
-		const INFO = 1;
-		const SUCCESS = 2;
-		const WARNING = 3;
-		const ERROR = 4;
-
-		const MAKE_START = 0;
-		const MAKE_END = 1;
-
-		/** @var callable[]  (message, type) */
-		public $onLog;
-
-		/** @var callable[]  (command name, type self::MAKE_*) */
-		public $onMake;
-
 		/** @var string */
 		private $directory;
 
 		/** @var array<string, Command> */
 		private $commands;
+
+		/** @var Logger */
+		private $logger;
 
 		/** @var Runner\Runner */
 		protected $runner;
@@ -39,11 +27,16 @@
 		 * @param  string $directory
 		 * @param  Command[] $commands
 		 */
-		public function __construct($directory, array $commands = [])
+		public function __construct(
+			$directory,
+			array $commands,
+			Logger $logger
+		)
 		{
 			$this->directory = PathHelper::absolutizePath($directory);
 			$this->commands = $commands;
 			$this->runner = $this->createRunner($this->directory);
+			$this->logger = $logger;
 		}
 
 
@@ -65,7 +58,7 @@
 		 */
 		public function make($command, ...$params)
 		{
-			$commandName = 'callback';
+			$commandName = '@anonymous';
 
 			if (is_string($command)) {
 				if (!isset($this->commands[$command])) {
@@ -78,7 +71,8 @@
 
 			$params = $this->filterParameters($params);
 
-			$this->fireEvent($this->onMake, [$commandName, self::MAKE_START]);
+			$this->logger->logCommandStart($commandName, $params);
+			$startedAt = microtime(TRUE);
 
 			if ($command instanceof Command) {
 				$command->run($this, $params);
@@ -87,7 +81,7 @@
 				call_user_func($command, $this, $params);
 			}
 
-			$this->fireEvent($this->onMake, [$commandName, self::MAKE_END]);
+			$this->logger->logCommandEnd($commandName, microtime(TRUE) - $startedAt);
 
 			return $this;
 		}
@@ -137,53 +131,51 @@
 
 		/**
 		 * @param  string $message
-		 * @param  int $type
-		 * @return self
+		 * @return void
 		 */
-		public function log($message, $type = self::INFO)
+		public function log($message)
 		{
-			$this->fireEvent($this->onLog, [$message, $type]);
-			return $this;
+			$this->logger->logInfo($message);
 		}
 
 
 		/**
 		 * @param  string $message
-		 * @return self
+		 * @return void
 		 */
 		public function logDebug($message)
 		{
-			return $this->log($message, self::DEBUG);
+			$this->logger->logDebug($message);
 		}
 
 
 		/**
 		 * @param  string $message
-		 * @return self
+		 * @return void
 		 */
 		public function logWarning($message)
 		{
-			return $this->log($message, self::WARNING);
+			$this->logger->logWarning($message);
 		}
 
 
 		/**
 		 * @param  string $message
-		 * @return self
+		 * @return void
 		 */
 		public function logError($message)
 		{
-			return $this->log($message, self::ERROR);
+			$this->logger->logError($message);
 		}
 
 
 		/**
 		 * @param  string $message
-		 * @return self
+		 * @return void
 		 */
 		public function logSuccess($message)
 		{
-			return $this->log($message, self::SUCCESS);
+			$this->logger->logSuccess($message);
 		}
 
 
@@ -194,23 +186,6 @@
 		protected function createRunner($directory)
 		{
 			return new Runner\Runner($directory);
-		}
-
-
-		/**
-		 * @param  callable[]|NULL $handlers
-		 * @param  array<mixed> $args
-		 * @return void
-		 */
-		private function fireEvent($handlers, array $args = [])
-		{
-			if (!is_array($handlers)) {
-				return;
-			}
-
-			foreach ($handlers as $handler) {
-				Callback::invokeArgs($handler, $args);
-			}
 		}
 
 

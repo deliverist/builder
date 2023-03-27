@@ -10,11 +10,8 @@ require __DIR__ . '/../../bootstrap.php';
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$log = [];
-	$builder = new Builder(TEMP_DIR);
-	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = [$message, $type];
-	};
+	$logger = new TestLogger;
+	$builder = new Builder(TEMP_DIR, [], $logger);
 	$command = new Commands\PingUrl;
 
 	file_put_contents(TEMP_DIR . '/index.html', "<html>
@@ -32,11 +29,11 @@ test(function () {
 	$command->run($builder, ['url' => TEMP_DIR . '/index.html'], FALSE);
 
 	Assert::same([
-		['> Lorem ipsum', Builder::INFO],
-		['> dolor', Builder::INFO],
-		['> sit', Builder::INFO],
-		['> amet', Builder::INFO],
-	], $log);
+		'[INFO] > Lorem ipsum',
+		'[INFO] > dolor',
+		'[INFO] > sit',
+		'[INFO] > amet',
+	], $logger->getLog());
 
 	Assert::exception(function () use ($command, $builder) {
 		$command->run($builder, []);

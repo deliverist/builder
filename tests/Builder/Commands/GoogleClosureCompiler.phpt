@@ -5,16 +5,11 @@ use Deliverist\Builder\Commands;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
-require __DIR__ . '/../../libs/TestBuilder.php';
 
 
 test(function () {
 
-	$log = [];
-	$builder = new TestBuilder(TEMP_DIR);
-	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = [$message, $type];
-	};
+	$builder = new TestBuilder(TEMP_DIR, [], new TestLogger);
 	$command = new Commands\GoogleClosureCompiler;
 
 	Assert::exception(function () use ($command, $builder) {

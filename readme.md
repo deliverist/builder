@@ -24,16 +24,13 @@ composer require deliverist/builder
 
 use Deliverist\Builder\Builder;
 use Deliverist\Builder\Commands;
+use Deliverist\Builder\Loggers;
 
 $builder = new Builder('/path/to/source/code', array(
 	'composer-install' => new Commands\ComposerInstall,
 	'rename' => new Commands\Rename,
 	'remove' => new Commands\Remove,
-));
-
-$builder->onLog[] = function ($message, $type) {
-	echo $message, "\n";
-};
+), new Loggers\TextLogger);
 
 $builder->make('composer-install')
 	->make('rename', ['from' => 'index.php', 'to' => 'www/index.php'])

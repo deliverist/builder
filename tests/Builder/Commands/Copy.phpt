@@ -10,11 +10,7 @@ require __DIR__ . '/../../bootstrap.php';
 test(function () {
 
 	Tester\Helpers::purge(TEMP_DIR);
-	$log = [];
-	$builder = new Builder(TEMP_DIR);
-	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = [$message, $type];
-	};
+	$builder = new Builder(TEMP_DIR, [], new TestLogger);
 	$command = new Commands\Copy;
 
 	file_put_contents(TEMP_DIR . '/source-1.txt', '');

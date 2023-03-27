@@ -5,16 +5,12 @@ use Deliverist\Builder\Commands;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
-require __DIR__ . '/../../libs/TestBuilder.php';
 
 
 test(function () {
 
-	$log = [];
-	$builder = new TestBuilder(TEMP_DIR);
-	$builder->onLog[] = function ($message, $type) use (&$log) {
-		$log[] = [$message, $type];
-	};
+	$logger = new TestLogger;
+	$builder = new TestBuilder(TEMP_DIR, [], $logger);
 	$command = new Commands\LessCompile;
 	$inputPath = TEMP_DIR . '/www/components/styles.less';
 	$outputPath = TEMP_DIR . '/www/components/styles.css';
@@ -31,9 +27,9 @@ test(function () {
 	$result = $builder->getRunnerResult();
 
 	Assert::same([
-		["$ 'lessc' '-ru' '--clean-css' '--no-color' '$inputPath' '$outputPath'\n\nDirectory: \n\n=> 0\n\n", Builder::DEBUG],
-		["$ '/bin/lessc' '-ru' '--clean-css' '--no-color' '$inputPath' '$outputPath'\n\nDirectory: \n\n=> 0\n\n", Builder::DEBUG],
-	], $log);
+		"[DEBUG] $ 'lessc' '-ru' '--clean-css' '--no-color' '$inputPath' '$outputPath'\n\nDirectory: \n\n=> 0\n\n",
+		"[DEBUG] $ '/bin/lessc' '-ru' '--clean-css' '--no-color' '$inputPath' '$outputPath'\n\nDirectory: \n\n=> 0\n\n",
+	], $logger->getLog());
 
 	Assert::exception(function () use ($command, $builder) {
 		$command->run($builder, []);

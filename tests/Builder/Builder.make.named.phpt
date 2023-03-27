@@ -18,10 +18,7 @@ test(function () { // named
 	};
 	$builder = new Builder(TEMP_DIR, [
 		'command' => $command,
-	]);
-	$builder->onMake[] = function ($commandName, $type) use (&$makeLog) {
-		$makeLog[] = [$commandName, $type];
-	};
+	], new TestLogger);
 
 
 	$builder->make('command');
