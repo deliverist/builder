@@ -26,11 +26,11 @@ use Deliverist\Builder\Builder;
 use Deliverist\Builder\Commands;
 use Deliverist\Builder\Loggers;
 
-$builder = new Builder('/path/to/source/code', array(
+$builder = new Builder('/path/to/source/code', [
 	'composer-install' => new Commands\ComposerInstall,
 	'rename' => new Commands\Rename,
 	'remove' => new Commands\Remove,
-), new Loggers\TextLogger);
+], new Loggers\TextLogger);
 
 $builder->make('composer-install')
 	->make('rename', ['from' => 'index.php', 'to' => 'www/index.php'])
