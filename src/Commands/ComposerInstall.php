@@ -11,17 +11,15 @@
 	class ComposerInstall implements Command
 	{
 		/** @var string */
-		private $executable = 'composer';
+		private $executable;
 
 
 		/**
 		 * @param  string $executable
-		 * @return self
 		 */
-		public function setExecutable($executable)
+		public function __construct($executable = 'composer')
 		{
 			$this->executable = $executable;
-			return $this;
 		}
 
 

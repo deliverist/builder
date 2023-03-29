@@ -11,11 +11,11 @@ test(function () {
 
 	$logger = new TestLogger;
 	$builder = new TestBuilder(TEMP_DIR, [], $logger);
-	$command = new Commands\ComposerInstall;
 
+	$command = new Commands\ComposerInstall;
 	$command->run($builder, []);
 
-	$command->setExecutable('/bin/composer');
+	$command = new Commands\ComposerInstall('/bin/composer');
 	$command->run($builder, ['composerFile' => 'app/composer.json']);
 
 	Assert::same([
