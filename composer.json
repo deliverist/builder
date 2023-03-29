@@ -16,7 +16,7 @@
 		"php": ">=5.6.0",
 		"czproject/path-helper": "^4.0",
 		"czproject/runner": "^1.0",
-		"nette/utils": "^2.4"
+		"nette/utils": "^2.4 || ^3.0 || ^4.0"
 	},
 	"autoload": {
 		"classmap": ["src/"]
