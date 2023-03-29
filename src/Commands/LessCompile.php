@@ -14,17 +14,15 @@
 	class LessCompile implements Command
 	{
 		/** @var string */
-		private $executable = 'lessc';
+		private $executable;
 
 
 		/**
 		 * @param  string $executable
-		 * @return self
 		 */
-		public function setExecutable($executable)
+		public function __construct($executable = 'lessc')
 		{
 			$this->executable = $executable;
-			return $this;
 		}
 
 

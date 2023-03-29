@@ -22,7 +22,7 @@ test(function () {
 	$command->run($builder, ['file' => 'www/components/styles.less']);
 	$result = $builder->getRunnerResult();
 
-	$command->setExecutable('/bin/lessc');
+	$command = new Commands\LessCompile('/bin/lessc');
 	$command->run($builder, ['file' => 'www/components/styles.less']);
 	$result = $builder->getRunnerResult();
 
