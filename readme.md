@@ -15,7 +15,7 @@
 composer require deliverist/builder
 ```
 
-`Deliverist\Builder` requires PHP 5.6.0 or later.
+`Deliverist\Builder` requires PHP 8.0 or later.
 
 ## Usage
 
