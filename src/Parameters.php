@@ -101,7 +101,17 @@
 				return [$value];
 
 			} elseif (is_array($value)) {
-				return array_values($value);
+				$res = [];
+
+				foreach ($value as $k => $v) {
+					if (!is_scalar($v) && !($v instanceof \Stringable)) {
+						throw new InvalidParameterTypeException("Invalid type of parameter '$name' > '$k', requires string, " . self::describeType($value) . ' given.');
+					}
+
+					$res[] = (string) $v;
+				}
+
+				return $res;
 			}
 
 			throw new InvalidParameterTypeException("Invalid type of parameter '$name', requires string[], " . self::describeType($value) . ' given.');
@@ -123,7 +133,17 @@
 			}
 
 			if (is_array($value)) {
-				return $value;
+				$res = [];
+
+				foreach ($value as $k => $v) {
+					if (!is_scalar($v) && !($v instanceof \Stringable)) {
+						throw new InvalidParameterTypeException("Invalid type of parameter '$name' > '$k', requires string, " . self::describeType($value) . ' given.');
+					}
+
+					$res[(string) $k] = (string) $v;
+				}
+
+				return $res;
 			}
 
 			throw new InvalidParameterTypeException("Invalid type of parameter '$name', requires array<string, string>, " . self::describeType($value) . ' given.');

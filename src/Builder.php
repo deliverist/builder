@@ -27,7 +27,7 @@
 
 		/**
 		 * @param  string $directory
-		 * @param  Command[] $commands
+		 * @param  array<string, Command> $commands
 		 */
 		public function __construct(
 			$directory,
@@ -211,6 +211,6 @@
 				$res[$paramName] = $param;
 			}
 
-			return $params;
+			return $res;
 		}
 	}
