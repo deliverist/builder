@@ -89,7 +89,7 @@
 		 * @param  string[]|NULL $default
 		 * @return string[]
 		 */
-		public static function stringList(array $args, $name, array $default = NULL)
+		public static function stringList(array $args, $name, ?array $default = NULL)
 		{
 			$value = isset($args[$name]) ? $args[$name] : $default;
 
@@ -114,7 +114,7 @@
 		 * @param  array<string, string>|NULL $default
 		 * @return array<string, string>
 		 */
-		public static function stringMap(array $args, $name, array $default = NULL)
+		public static function stringMap(array $args, $name, ?array $default = NULL)
 		{
 			$value = isset($args[$name]) ? $args[$name] : $default;
 
